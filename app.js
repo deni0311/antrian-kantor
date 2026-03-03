@@ -1,0 +1,61 @@
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+let nomorAntrian = 0;
+
+// Halaman untuk TV (Layar Monitor)
+app.get('/tv', (req, res) => {
+    res.send(`
+        <body style="background:#000; color:#0f0; text-align:center; font-family:sans-serif; display:flex; flex-direction:column; justify-content:center; height:100vh; margin:0;">
+            <h2 style="color:white;">NOMOR ANTRIAN</h2>
+            <h1 id="angka" style="font-size:300px; margin:0;">${nomorAntrian}</h1>
+            <h2 id="status" style="color:white;">Silakan Menunggu</h2>
+            <script src="/socket.io/socket.io.js"></script>
+            <script>
+                const socket = io();
+                socket.on('update-nomor', (n) => {
+                    document.getElementById('angka').innerText = n;
+                    document.getElementById('status').innerText = "SILAKAN KE LOKET 1";
+                    
+                    // Suara panggil otomatis
+                    const pesan = new SpeechSynthesisUtterance("Nomor antrian " + n + " menuju loket satu");
+                    pesan.lang = 'id-ID';
+                    window.speechSynthesis.speak(pesan);
+                });
+            </script>
+        </body>
+    `);
+});
+
+// Halaman untuk Admin (Tombol Panggil)
+app.get('/admin', (req, res) => {
+    res.send(`
+        <body style="text-align:center; font-family:sans-serif; padding-top:100px;">
+            <h1>PANEL ADMIN</h1>
+            <button style="padding:50px; font-size:30px; background:green; color:white; border-radius:20px; cursor:pointer;" 
+                    onclick="fetch('/panggil')">PANGGIL BERIKUTNYA</button>
+            <p>Klik tombol di atas untuk update layar TV</p>
+        </body>
+    `);
+});
+
+// Fungsi Logika Panggil
+app.get('/panggil', (req, res) => {
+    nomorAntrian++;
+    io.emit('update-nomor', nomorAntrian); 
+    res.send('Nomor ' + nomorAntrian + ' dipanggil!');
+});
+
+const PORT = 3000;
+server.listen(PORT, () => {
+    console.log('------------------------------------------');
+    console.log('SERVER AKTIF!');
+    console.log('Buka Layar TV: http://localhost:3000/tv');
+    console.log('Buka Remote Admin: http://localhost:3000/admin');
+    console.log('------------------------------------------');
+});
