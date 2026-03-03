@@ -14,7 +14,7 @@ let nomorDipanggil = 0;
 app.get('/tv', (req, res) => {
     res.send(`
         <!DOCTYPE html>
-        <html>
+        <html lang="id">
         <body style="background:#000; color:#0f0; text-align:center; font-family:sans-serif; display:flex; flex-direction:column; justify-content:center; height:100vh; margin:0;">
             <div style="margin-top: 20px;">
                 <img src="/logo.png" style="height: 120px; width: auto;" onerror="this.style.display='none'">
@@ -23,6 +23,7 @@ app.get('/tv', (req, res) => {
             <h2 style="color:white; margin-top: 30px;">NOMOR ANTRIAN</h2>
             <h1 id="angka" style="font-size:300px; margin:0; line-height: 1;">${nomorDipanggil}</h1>
             <h2 id="status" style="color:white;">Silakan Menunggu</h2>
+            
             <script src="/socket.io/socket.io.js"></script>
             <script>
                 const socket = io();
