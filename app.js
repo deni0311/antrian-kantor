@@ -51,6 +51,28 @@ app.get('/admin', (req, res) => {
     `);
 });
 
+// Halaman untuk Pengunjung Ambil Nomor
+app.get('/ambil', (req, res) => {
+    res.send(`
+        <body style="text-align:center; font-family:sans-serif; background:#f0f0f0; padding-top:100px;">
+            <img src="/logo.png" style="height:100px;">
+            <h1>Selamat Datang di ASABRI</h1>
+            <p>Silakan tekan tombol di bawah untuk mengambil nomor antrian</p>
+            
+            <button onclick="ambil()" style="padding:50px; font-size:40px; border-radius:20px; background:green; color:white; cursor:pointer;">
+                AMBIL NOMOR ANTRIAN
+            </button>
+
+            <script>
+                function ambil() {
+                    // Di sini kita bisa tambah logika untuk cetak atau simpan nomor
+                    alert("Nomor Anda sedang diproses. Silakan menunggu.");
+                }
+            </script>
+        </body>
+    `);
+});
+
 // Fungsi Logika Panggil
 app.get('/panggil', (req, res) => {
     nomorAntrian++;
