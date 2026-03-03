@@ -1,17 +1,12 @@
 {
-  "name": "aplikasi-antrian",
+  "name": "antrian-kantor",
   "version": "1.0.0",
-  "description": "",
   "main": "app.js",
- "scripts": {
-  "start": "node app.js"
-},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
-    "express": "^5.2.1",
-    "socket.io": "^4.8.3"
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
   }
 }
