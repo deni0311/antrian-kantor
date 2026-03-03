@@ -10,7 +10,6 @@ const io = new Server(server);
 let nomorAntrian = 0; 
 let nomorDipanggil = 0; 
 
-// 1. HALAMAN TV
 app.get('/tv', (req, res) => {
     res.send(`
         <!DOCTYPE html>
@@ -42,7 +41,6 @@ app.get('/tv', (req, res) => {
     `);
 });
 
-// 2. HALAMAN ADMIN
 app.get('/admin', (req, res) => {
     res.send(`
         <body style="text-align:center; font-family:sans-serif; padding-top:100px;">
@@ -57,7 +55,6 @@ app.get('/admin', (req, res) => {
     `);
 });
 
-// 3. HALAMAN AMBIL NOMOR
 app.get('/ambil', (req, res) => {
     res.send(`
         <body style="text-align:center; font-family:sans-serif; padding-top:100px;">
