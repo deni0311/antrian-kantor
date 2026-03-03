@@ -10,13 +10,13 @@ const io = new Server(server);
 let nomorAntrian = 0; 
 let nomorDipanggil = 0; 
 
+// 1. HALAMAN TV
 app.get('/tv', (req, res) => {
     res.send(`
         <!DOCTYPE html>
         <html>
         <body style="background:#000; color:#0f0; text-align:center; font-family:sans-serif; display:flex; flex-direction:column; justify-content:center; height:100vh; margin:0;">
             <div style="margin-top: 20px;">
-                <img src="/logo.png" style="height: 120px; width: auto;" onerror="this.style.display='none'">
                 <h2 style="color:white; margin: 10px 0;">KANTOR CABANG ASABRI MALANG</h2>
             </div>
             <h2 style="color:white; margin-top: 30px;">NOMOR ANTRIAN</h2>
@@ -41,6 +41,7 @@ app.get('/tv', (req, res) => {
     `);
 });
 
+// 2. HALAMAN ADMIN
 app.get('/admin', (req, res) => {
     res.send(`
         <body style="text-align:center; font-family:sans-serif; padding-top:100px;">
@@ -55,10 +56,10 @@ app.get('/admin', (req, res) => {
     `);
 });
 
+// 3. HALAMAN AMBIL NOMOR
 app.get('/ambil', (req, res) => {
     res.send(`
         <body style="text-align:center; font-family:sans-serif; padding-top:100px;">
-            <img src="/logo.png" style="height:100px;" onerror="this.style.display='none'">
             <h1>AMBIL ANTRIAN</h1>
             <button style="padding:50px; font-size:30px; background:blue; color:white; border-radius:20px; cursor:pointer;" onclick="ambil()">AMBIL NOMOR</button>
             <script src="/socket.io/socket.io.js"></script>
