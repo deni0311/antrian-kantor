@@ -76,24 +76,17 @@ app.get('/ambil', (req, res) => {
     `);
 });
 
-// Fungsi Logika Panggil
-app.get('/panggil', (req, res) => {
-    nomorAntrian++;
-    io.emit('update-nomor', nomorAntrian); 
-    res.send('Nomor ' + nomorAntrian + ' dipanggil!');
-});
-
 io.on('connection', (socket) => {
-    console.log('Seseorang terhubung');
-
-    // Tambahkan perintah ini:
+    // 1. Tombol AMBIL: Menambah angka antrian
     socket.on('tambah-antrian', () => {
-        nomorAntrian++; // Angka naik 1
-        io.emit('update-nomor', nomorAntrian); // Kirim angka baru ke TV & Admin
+        nomorAntrian++; 
+        io.emit('update-nomor', nomorAntrian);
     });
 
+    // 2. Tombol PANGGIL: Hanya panggil ulang angka yang sudah ada (TIDAK menambah)
     socket.on('panggil', () => {
-        io.emit('update-nomor', nomorAntrian);
+        // Hapus baris nomorAntrian++ di sini
+        io.emit('update-nomor', nomorAntrian); 
     });
 });
 
