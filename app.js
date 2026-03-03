@@ -9,6 +9,7 @@ const io = new Server(server);
 let nomorAntrian = 0; 
 let nomorDipanggil = 0; 
 
+// 1. HALAMAN TV (Yang sudah berhasil)
 app.get('/tv', (req, res) => {
     res.send(`
         <!DOCTYPE html>
@@ -33,10 +34,43 @@ app.get('/tv', (req, res) => {
     `);
 });
 
-app.get('/', (req, res) => { res.send('Antrian Online'); });
+// 2. HALAMAN ADMIN (Untuk memanggil)
+app.get('/admin', (req, res) => {
+    res.send(`
+        <body style="text-align:center; font-family:sans-serif; padding-top:100px;">
+            <h1>PANEL ADMIN ASABRI</h1>
+            <button style="padding:50px; font-size:30px; background:green; color:white; border-radius:20px; cursor:pointer;" onclick="panggil()">PANGGIL BERIKUTNYA</button>
+            <script src="/socket.io/socket.io.js"></script>
+            <script>
+                const socket = io();
+                function panggil() { socket.emit('proses-panggil'); }
+            </script>
+        </body>
+    `);
+});
+
+// 3. HALAMAN AMBIL NOMOR
+app.get('/ambil', (req, res) => {
+    res.send(`
+        <body style="text-align:center; font-family:sans-serif; padding-top:100px;">
+            <h1>AMBIL ANTRIAN</h1>
+            <button style="padding:50px; font-size:30px; background:blue; color:white; border-radius:20px; cursor:pointer;" onclick="ambil()">AMBIL NOMOR</button>
+            <script src="/socket.io/socket.io.js"></script>
+            <script>
+                const socket = io();
+                function ambil() { socket.emit('tambah-antrian'); alert('Nomor diambil!'); }
+            </script>
+        </body>
+    `);
+});
+
+app.get('/', (req, res) => { res.send('Antrian Online - Silakan buka /tv, /admin, atau /ambil'); });
 
 io.on('connection', (socket) => {
-    socket.on('tambah-antrian', () => { nomorAntrian++; io.emit('update', nomorAntrian); });
+    socket.on('tambah-antrian', () => { 
+        nomorAntrian++; 
+        io.emit('update-layar-saja', nomorAntrian); 
+    });
     socket.on('proses-panggil', () => {
         if (nomorDipanggil < nomorAntrian) {
             nomorDipanggil++;
