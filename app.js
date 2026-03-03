@@ -16,7 +16,7 @@ app.get('/tv', (req, res) => {
             
             <div style="margin-top: 20px;">
                 <img src="/logo.png" style="height: 120px; width: auto;">
-                <h2 style="color:white; margin: 10px 0;">KANTOR ASABRI KABUPATEN ...</h2>
+                <h2 style="color:white; margin: 10px 0;">KANTOR CABANG ASABRI MALANG</h2>
             </div>
 
             <h2 style="color:white; margin-top: 30px;">NOMOR ANTRIAN</h2>
