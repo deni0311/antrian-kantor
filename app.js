@@ -3,6 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 
 const app = express();
+app.use(express.static('public'));
 const server = http.createServer(app);
 const io = new Server(server);
 
@@ -12,9 +13,16 @@ let nomorAntrian = 0;
 app.get('/tv', (req, res) => {
     res.send(`
         <body style="background:#000; color:#0f0; text-align:center; font-family:sans-serif; display:flex; flex-direction:column; justify-content:center; height:100vh; margin:0;">
-            <h2 style="color:white;">NOMOR ANTRIAN</h2>
-            <h1 id="angka" style="font-size:300px; margin:0;">${nomorAntrian}</h1>
+            
+            <div style="margin-top: 20px;">
+                <img src="/logo.png" style="height: 120px; width: auto;">
+                <h2 style="color:white; margin: 10px 0;">KANTOR ASABRI KABUPATEN ...</h2>
+            </div>
+
+            <h2 style="color:white; margin-top: 30px;">NOMOR ANTRIAN</h2>
+            <h1 id="angka" style="font-size:300px; margin:0; line-height: 1;">${nomorAntrian}</h1>
             <h2 id="status" style="color:white;">Silakan Menunggu</h2>
+            
             <script src="/socket.io/socket.io.js"></script>
             <script>
                 const socket = io();
@@ -22,7 +30,6 @@ app.get('/tv', (req, res) => {
                     document.getElementById('angka').innerText = n;
                     document.getElementById('status').innerText = "SILAKAN KE LOKET 1";
                     
-                    // Suara panggil otomatis
                     const pesan = new SpeechSynthesisUtterance("Nomor antrian " + n + " menuju loket satu");
                     pesan.lang = 'id-ID';
                     window.speechSynthesis.speak(pesan);
