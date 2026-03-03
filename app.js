@@ -51,7 +51,7 @@ app.get('/admin', (req, res) => {
     `);
 });
 
-// Halaman untuk Pengunjung Ambil Nomor
+// Halaman untuk Pengunjung Ambil Nomor (Versi Berkoneksi)
 app.get('/ambil', (req, res) => {
     res.send(`
         <body style="text-align:center; font-family:sans-serif; background:#f0f0f0; padding-top:100px;">
@@ -63,10 +63,13 @@ app.get('/ambil', (req, res) => {
                 AMBIL NOMOR ANTRIAN
             </button>
 
+            <script src="/socket.io/socket.io.js"></script>
             <script>
+                const socket = io();
                 function ambil() {
-                    // Di sini kita bisa tambah logika untuk cetak atau simpan nomor
-                    alert("Nomor Anda sedang diproses. Silakan menunggu.");
+                    // Memberitahu server (app.js) bahwa ada orang ambil antrian baru
+                    socket.emit('tambah-antrian');
+                    alert("Nomor Antrian Berhasil Diambil!");
                 }
             </script>
         </body>
@@ -78,6 +81,20 @@ app.get('/panggil', (req, res) => {
     nomorAntrian++;
     io.emit('update-nomor', nomorAntrian); 
     res.send('Nomor ' + nomorAntrian + ' dipanggil!');
+});
+
+io.on('connection', (socket) => {
+    console.log('Seseorang terhubung');
+
+    // Tambahkan perintah ini:
+    socket.on('tambah-antrian', () => {
+        nomorAntrian++; // Angka naik 1
+        io.emit('update-nomor', nomorAntrian); // Kirim angka baru ke TV & Admin
+    });
+
+    socket.on('panggil', () => {
+        io.emit('update-nomor', nomorAntrian);
+    });
 });
 
 const PORT = 3000;
