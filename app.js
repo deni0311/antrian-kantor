@@ -77,24 +77,43 @@ app.get('/ambil', (req, res) => {
         <!DOCTYPE html>
         <html>
         <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
-                @media print { body * { visibility: hidden; } #cetak, #cetak * { visibility: visible; } #cetak { position: absolute; left: 0; top: 0; width: 58mm; } }
+                /* Gaya untuk tampilan di Tablet */
+                body { text-align:center; font-family:sans-serif; background:#e3f2fd; padding-top:50px; }
+                .btn-ambil { padding:50px; font-size:30px; background:blue; color:white; border-radius:20px; cursor:pointer; }
+                
+                /* Gaya khusus untuk cetak struk */
+                @media print {
+                    @page { margin: 0; }
+                    body * { visibility: hidden; }
+                    #cetak, #cetak * { visibility: visible; }
+                    #cetak { 
+                        position: absolute; left: 0; top: 0; 
+                        width: 54mm; /* Sesuaikan sedikit lebih kecil dari 58mm agar tidak terpotong */
+                        padding: 2mm;
+                        background: white;
+                    }
+                    .jarak-potong { height: 50px; } /* Memberi ruang agar teks terakhir tidak kena sobekan */
+                }
             </style>
         </head>
-        <body style="text-align:center; font-family:sans-serif; padding-top:100px;">
+        <body>
             <div id="konten-layar">
-                <h1>AMBIL ANTRIAN ASABRI</h1>
-                <button style="padding:50px; font-size:30px; background:blue; color:white; border-radius:20px;" onclick="ambil()">AMBIL & CETAK NOMOR</button>
+                <h1>ASABRI MALANG</h1>
+                <button class="btn-ambil" onclick="ambil()">AMBIL NOMOR</button>
             </div>
 
-            <div id="cetak" style="display:none; text-align:center; width:58mm; font-family:monospace;">
-                <p>ASABRI MALANG</p>
-                <p>-------------------------</p>
-                <p>Nomor Antrian:</p>
-                <h1 style="font-size:50px; margin:10px 0;" id="nomor-struk">0</h1>
-                <p id="jam-cetak"></p>
-                <p>-------------------------</p>
-                <p>Silakan Menunggu</p>
+            <div id="cetak" style="display:none; text-align:center; font-family: 'Courier New', Courier, monospace;">
+                <h3 style="margin:0; font-size:16px;">ASABRI MALANG</h3>
+                <p style="margin:0;">-----------------------</p>
+                <p style="margin:5px 0; font-size:14px;">Nomor Antrian:</p>
+                <h1 style="font-size:70px; margin:10px 0; font-weight:bold;" id="nomor-struk">0</h1>
+                <p style="margin:0; font-size:12px;" id="jam-cetak"></p>
+                <p style="margin:0;">-----------------------</p>
+                <p style="margin:0; font-size:14px; font-weight:bold;">SILAKAN MENUNGGU</p>
+                <div class="jarak-potong"></div>
+                <p style="font-size:10px;">.</p> <div style="height:30px;"></div>
             </div>
 
             <script src="/socket.io/socket.io.js"></script>
@@ -106,8 +125,12 @@ app.get('/ambil', (req, res) => {
                     document.getElementById('nomor-struk').innerText = nomor;
                     document.getElementById('jam-cetak').innerText = new Date().toLocaleString('id-ID');
                     document.getElementById('cetak').style.display = 'block';
-                    window.print(); // Membuka jendela print otomatis
-                    document.getElementById('cetak').style.display = 'none';
+                    
+                    // Delay sedikit agar browser sempat mengganti angka sebelum cetak
+                    setTimeout(() => {
+                        window.print();
+                        document.getElementById('cetak').style.display = 'none';
+                    }, 500);
                 });
                 socket.on('reset-layar', () => { location.reload(); });
             </script>
