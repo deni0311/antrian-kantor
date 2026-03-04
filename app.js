@@ -78,26 +78,28 @@ app.get('/ambil', (req, res) => {
         <html>
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <style>
-                body { text-align:center; font-family:sans-serif; background:#e3f2fd; padding-top:50px; }
-                .btn-ambil { padding:50px; font-size:30px; background:blue; color:white; border-radius:20px; cursor:pointer; }
-                
-                /* Pengaturan khusus Printer Thermal 58mm */
-                @media print {
-                    @page { margin: 0; }
-                    body * { visibility: hidden; }
-                    #cetak, #cetak * { visibility: visible; }
-                    #cetak { 
-                        position: absolute; 
-                        left: 0; 
-                        top: 0; 
-                        width: 52mm; /* Dipersempit agar margin fisik printer tidak memotong teks */
-                        text-align: center;
-                    }
-                    .garis { border-bottom: 1px dashed black; margin: 10px 0; }
-                    .spasi-besar { height: 40px; } /* Jarak agar tidak mepet saat sobek kertas */
+           <style>
+            body { text-align:center; font-family:sans-serif; background:#e3f2fd; padding-top:50px; }
+            .btn-ambil { padding:50px; font-size:30px; background:blue; color:white; border-radius:20px; cursor:pointer; }
+            
+            @media print {
+                @page { 
+                    margin: 0; 
+                    size: 58mm auto; /* Memaksa browser mengenali ukuran kertas thermal */
                 }
-            </style>
+                body * { visibility: hidden; }
+                #cetak, #cetak * { visibility: visible; }
+                #cetak { 
+                    position: absolute; 
+                    left: 0; 
+                    top: 0; 
+                    width: 48mm; /* Dibuat lebih sempit agar teks tidak terpotong margin fisik */
+                    text-align: center;
+                    zoom: 1.5; /* INI KUNCINYA: Memaksa semua tulisan jadi 1.5x lebih besar saat dicetak */
+                }
+                .garis { border-bottom: 2px solid black; margin: 5px 0; }
+            }
+        </style>
         </head>
         <body>
             <div id="konten-layar">
