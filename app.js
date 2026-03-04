@@ -79,22 +79,23 @@ app.get('/ambil', (req, res) => {
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
-                /* Gaya untuk tampilan di Tablet */
                 body { text-align:center; font-family:sans-serif; background:#e3f2fd; padding-top:50px; }
                 .btn-ambil { padding:50px; font-size:30px; background:blue; color:white; border-radius:20px; cursor:pointer; }
                 
-                /* Gaya khusus untuk cetak struk */
+                /* Pengaturan khusus Printer Thermal 58mm */
                 @media print {
                     @page { margin: 0; }
                     body * { visibility: hidden; }
                     #cetak, #cetak * { visibility: visible; }
                     #cetak { 
-                        position: absolute; left: 0; top: 0; 
-                        width: 54mm; /* Sesuaikan sedikit lebih kecil dari 58mm agar tidak terpotong */
-                        padding: 2mm;
-                        background: white;
+                        position: absolute; 
+                        left: 0; 
+                        top: 0; 
+                        width: 52mm; /* Dipersempit agar margin fisik printer tidak memotong teks */
+                        text-align: center;
                     }
-                    .jarak-potong { height: 50px; } /* Memberi ruang agar teks terakhir tidak kena sobekan */
+                    .garis { border-bottom: 1px dashed black; margin: 10px 0; }
+                    .spasi-besar { height: 40px; } /* Jarak agar tidak mepet saat sobek kertas */
                 }
             </style>
         </head>
@@ -104,16 +105,25 @@ app.get('/ambil', (req, res) => {
                 <button class="btn-ambil" onclick="ambil()">AMBIL NOMOR</button>
             </div>
 
-            <div id="cetak" style="display:none; text-align:center; font-family: 'Courier New', Courier, monospace;">
-                <h3 style="margin:0; font-size:16px;">ASABRI MALANG</h3>
-                <p style="margin:0;">-----------------------</p>
-                <p style="margin:5px 0; font-size:14px;">Nomor Antrian:</p>
-                <h1 style="font-size:70px; margin:10px 0; font-weight:bold;" id="nomor-struk">0</h1>
-                <p style="margin:0; font-size:12px;" id="jam-cetak"></p>
-                <p style="margin:0;">-----------------------</p>
-                <p style="margin:0; font-size:14px; font-weight:bold;">SILAKAN MENUNGGU</p>
-                <div class="jarak-potong"></div>
-                <p style="font-size:10px;">.</p> <div style="height:30px;"></div>
+            <div id="cetak" style="display:none; width: 52mm; margin: 0 auto; font-family: 'Courier New', monospace;">
+                <div style="text-align: center;">
+                    <h3 style="margin: 0; font-size: 18px; font-weight: bold;">ASABRI MALANG</h3>
+                    <div class="garis"></div>
+                    
+                    <p style="margin: 15px 0 5px 0; font-size: 16px;">Nomor Antrian:</p>
+                    
+                    <h1 style="font-size: 80px; margin: 10px 0; display: block; width: 100%; text-align: center;" id="nomor-struk">0</h1>
+                    
+                    <div style="height: 15px;"></div>
+                    
+                    <p style="margin: 0; font-size: 14px;" id="jam-cetak"></p>
+                    <div class="garis"></div>
+                    
+                    <p style="margin: 10px 0; font-size: 16px; font-weight: bold;">SILAKAN MENUNGGU</p>
+                    
+                    <div class="spasi-besar"></div>
+                    <p style="margin:0;">.</p>
+                </div>
             </div>
 
             <script src="/socket.io/socket.io.js"></script>
@@ -123,10 +133,15 @@ app.get('/ambil', (req, res) => {
 
                 socket.on('siap-cetak', (nomor) => {
                     document.getElementById('nomor-struk').innerText = nomor;
-                    document.getElementById('jam-cetak').innerText = new Date().toLocaleString('id-ID');
+                    
+                    // Format tanggal & jam lebih rapi
+                    const skrg = new Date();
+                    const tgl = skrg.toLocaleDateString('id-ID');
+                    const jam = skrg.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                    document.getElementById('jam-cetak').innerText = tgl + " " + jam;
+
                     document.getElementById('cetak').style.display = 'block';
                     
-                    // Delay sedikit agar browser sempat mengganti angka sebelum cetak
                     setTimeout(() => {
                         window.print();
                         document.getElementById('cetak').style.display = 'none';
