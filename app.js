@@ -78,28 +78,33 @@ app.get('/ambil', (req, res) => {
         <html>
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-           <style>
-            body { text-align:center; font-family:sans-serif; background:#e3f2fd; padding-top:50px; }
-            .btn-ambil { padding:50px; font-size:30px; background:blue; color:white; border-radius:20px; cursor:pointer; }
-            
-            @media print {
-                @page { 
-                    margin: 0; 
-                    size: 58mm auto; /* Memaksa browser mengenali ukuran kertas thermal */
+            <style>
+                body { text-align:center; font-family:sans-serif; background:#e3f2fd; padding-top:50px; }
+                .btn-ambil { padding:50px; font-size:30px; background:blue; color:white; border-radius:20px; cursor:pointer; }
+                
+                @media print {
+                    @page { margin: 0; size: 58mm auto; }
+                    body * { visibility: hidden; }
+                    #cetak, #cetak * { visibility: visible; }
+                    #cetak { 
+                        position: absolute; left: 0; top: 0; 
+                        width: 48mm; 
+                        text-align: center !important;
+                    }
+                    h1 { font-size: 85pt !important; margin: 10px 0 !important; text-align: center; width: 100%; }
+                    h3 { font-size: 16pt; margin-bottom: 5px; text-align: center; }
+                    p { font-size: 12pt; margin: 3px 0; text-align: center; }
+                    
+                    /* Gaya khusus untuk teks sisa antrian */
+                    .sisa-teks { font-size: 14pt; font-weight: bold; margin-top: 10px; }
+                    
+                    /* Mengecilkan teks Silakan Menunggu sesuai permintaan */
+                    .tunggu-teks { font-size: 11pt; font-weight: normal; margin-top: 5px; }
+                    
+                    .garis { border-bottom: 2px solid black; margin: 5px 0; }
+                    .jarak-sobek { height: 70px; }
                 }
-                body * { visibility: hidden; }
-                #cetak, #cetak * { visibility: visible; }
-                #cetak { 
-                    position: absolute; 
-                    left: 0; 
-                    top: 0; 
-                    width: 48mm; /* Dibuat lebih sempit agar teks tidak terpotong margin fisik */
-                    text-align: center;
-                    zoom: 1.5; /* INI KUNCINYA: Memaksa semua tulisan jadi 1.5x lebih besar saat dicetak */
-                }
-                .garis { border-bottom: 2px solid black; margin: 5px 0; }
-            }
-        </style>
+            </style>
         </head>
         <body>
             <div id="konten-layar">
@@ -107,23 +112,22 @@ app.get('/ambil', (req, res) => {
                 <button class="btn-ambil" onclick="ambil()">AMBIL NOMOR</button>
             </div>
 
-            <div id="cetak" style="display:none; width: 52mm; margin: 0 auto; font-family: 'Courier New', monospace;">
+            <div id="cetak" style="display:none; width: 48mm; margin: 0 auto; font-family: 'Courier New', monospace;">
                 <div style="text-align: center;">
-                    <h3 style="margin: 0; font-size: 18px; font-weight: bold;">ASABRI MALANG</h3>
+                    <h3 style="margin: 0; font-weight: bold;">ASABRI MALANG</h3>
                     <div class="garis"></div>
                     
-                    <p style="margin: 15px 0 5px 0; font-size: 16px;">Nomor Antrian:</p>
+                    <p style="margin-top: 10px;">Nomor Antrian:</p>
+                    <h1 id="nomor-struk">0</h1>
                     
-                    <h1 style="font-size: 80px; margin: 10px 0; display: block; width: 100%; text-align: center;" id="nomor-struk">0</h1>
-                    
-                    <div style="height: 15px;"></div>
-                    
-                    <p style="margin: 0; font-size: 14px;" id="jam-cetak"></p>
+                    <p id="jam-cetak" style="font-size: 10pt;"></p>
                     <div class="garis"></div>
                     
-                    <p style="margin: 10px 0; font-size: 16px; font-weight: bold;">SILAKAN MENUNGGU</p>
+                    <p class="sisa-teks">Sisa Antrian: <span id="sisa-struk">0</span></p>
                     
-                    <div class="spasi-besar"></div>
+                    <p class="tunggu-teks">SILAKAN MENUNGGU</p>
+                    
+                    <div class="jarak-sobek"></div>
                     <p style="margin:0;">.</p>
                 </div>
             </div>
@@ -133,17 +137,15 @@ app.get('/ambil', (req, res) => {
                 const socket = io();
                 function ambil() { socket.emit('tambah-antrian'); }
 
-                socket.on('siap-cetak', (nomor) => {
-                    document.getElementById('nomor-struk').innerText = nomor;
+                socket.on('siap-cetak', (data) => {
+                    document.getElementById('nomor-struk').innerText = data.nomor;
+                    // Menghitung sisa: Total diambil dikurangi yang sudah dipanggil
+                    document.getElementById('sisa-struk').innerText = data.total - data.dipanggil;
                     
-                    // Format tanggal & jam lebih rapi
                     const skrg = new Date();
-                    const tgl = skrg.toLocaleDateString('id-ID');
-                    const jam = skrg.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-                    document.getElementById('jam-cetak').innerText = tgl + " " + jam;
+                    document.getElementById('jam-cetak').innerText = skrg.toLocaleDateString('id-ID') + " " + skrg.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
 
                     document.getElementById('cetak').style.display = 'block';
-                    
                     setTimeout(() => {
                         window.print();
                         document.getElementById('cetak').style.display = 'none';
@@ -174,6 +176,13 @@ io.on('connection', (socket) => {
     socket.on('reset-antrian', () => {
         nomorAntrian = 0; nomorDipanggil = 0;
         io.emit('reset-layar');
+    });
+
+    socket.on('tambah-antrian', () => { 
+        nomorAntrian++; 
+        io.emit('update-layar', { total: nomorAntrian, dipanggil: nomorDipanggil, isPanggil: false }); 
+        // Mengirim data lengkap ke halaman ambil untuk dicetak
+        socket.emit('siap-cetak', { nomor: nomorAntrian, total: nomorAntrian, dipanggil: nomorDipanggil });
     });
 });
 
