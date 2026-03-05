@@ -74,15 +74,30 @@ app.get('/ambil', (req, res) => {
         <!DOCTYPE html>
         <html>
         <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <style>
                 body { text-align:center; font-family:sans-serif; background:#e3f2fd; padding-top:100px; }
                 @media print {
                     @page { margin: 0; size: 58mm auto; }
                     body * { visibility: hidden; }
                     #cetak, #cetak * { visibility: visible; }
-                    #cetak { position: absolute; left: 0; top: 0; width: 48mm; text-align: center; }
+                    #cetak { 
+                        position: absolute; 
+                        left: 2mm; /* Memberi jarak aman 2mm dari tepi kiri agar tidak terpotong */
+                        top: 0; 
+                        width: 44mm; /* Dipersempit lagi agar teks benar-benar di tengah area cetak */
+                        text-align: center; 
+                    }
                     h1 { font-size: 80pt !important; margin: 10px 0 !important; }
-                    .tunggu-teks { font-size: 11pt !important; margin-top: 5px; font-weight: normal; }
+                    
+                    /* Memperbesar tulisan SILAKAN MENUNGGU sesuai permintaan */
+                    .tunggu-teks { 
+                        font-size: 14pt !important; 
+                        margin-top: 10px; 
+                        font-weight: bold; 
+                        text-transform: uppercase;
+                    }
+                    
                     .sisa-teks { font-size: 14pt !important; font-weight: bold; margin-top: 10px; }
                     .garis { border-bottom: 2px solid black; margin: 5px 0; }
                     .jarak-sobek { height: 70px; }
@@ -93,8 +108,8 @@ app.get('/ambil', (req, res) => {
             <h1>AMBIL ANTRIAN ASABRI</h1>
             <button style="padding:50px; font-size:30px; background:blue; color:white; border-radius:20px; cursor:pointer;" onclick="ambil()">AMBIL & CETAK NOMOR</button>
 
-            <div id="cetak" style="display:none; width: 48mm; font-family: 'Courier New', monospace;">
-                <h3 style="margin: 0; font-size: 16pt;">ASABRI MALANG</h3>
+            <div id="cetak" style="display:none; font-family: 'Courier New', monospace;">
+                <h3 style="margin: 0; font-size: 16pt; font-weight: bold;">ASABRI MALANG</h3>
                 <div class="garis"></div>
                 <p style="font-size: 12pt; margin: 10px 0 0 0;">Nomor Antrian:</p>
                 <h1 id="nomor-struk">0</h1>
