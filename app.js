@@ -89,14 +89,16 @@ app.get('/ambil', (req, res) => {
                         left: 0; 
                         top: 0; 
                         width: 42mm; 
-                        padding-left: 6mm; /* Menggeser teks ke kanan agar tidak terpotong tepi kiri printer */
+                        padding-left: 6mm; 
                         text-align: center !important; 
                     }
                     h1 { font-size: 80pt !important; margin: 5px 0 !important; width: 100%; text-align: center; }
                     .tunggu-teks { font-size: 13pt !important; font-weight: bold; margin-top: 5px; text-align: center; width: 100%; }
                     .sisa-teks { font-size: 14pt !important; font-weight: bold; margin-top: 10px; text-align: center; width: 100%; }
                     .garis { border-bottom: 2px solid black; margin: 5px 0; width: 100%; }
-                    .jarak-sobek { height: 70px; }
+                    
+                    /* MENGURANGI JARAK POTONG KERTAS */
+                    .jarak-sobek { height: 25px; } 
                 }
             </style>
         </head>
@@ -114,8 +116,8 @@ app.get('/ambil', (req, res) => {
                     <div class="garis"></div>
                     <p class="sisa-teks">Sisa Antrian: <span id="sisa-struk">0</span></p>
                     <p class="tunggu-teks">SILAKAN MENUNGGU</p>
+                    
                     <div class="jarak-sobek"></div>
-                    <p>.</p>
                 </div>
             </div>
 
