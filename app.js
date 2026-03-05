@@ -9,22 +9,25 @@ const io = new Server(server);
 let nomorAntrian = 0; 
 let nomorDipanggil = 0; 
 
-// 1. HALAMAN TV (Display Utama)
+// 1. HALAMAN TV (Display Utama di Kantor)
 app.get('/tv', (req, res) => {
     res.send(`
         <!DOCTYPE html>
         <html>
+        <head><title>Display Antrian ASABRI</title></head>
         <body style="background:#000; color:#0f0; text-align:center; font-family:sans-serif; display:flex; flex-direction:column; justify-content:center; height:100vh; margin:0; overflow:hidden;">
-            <h2 style="color:white;">KANTOR CABANG ASABRI MALANG</h2>
+            <h2 style="color:white; letter-spacing: 2px;">KANTOR CABANG ASABRI MALANG</h2>
             <div style="display:flex; justify-content:space-around; align-items:center; width:100%;">
                 <div>
                     <h2 style="color:white;">NOMOR ANTRIAN</h2>
-                    <h1 id="angka" style="font-size:250px; margin:0;">${nomorDipanggil}</h1>
-                    <h1 id="loketText" style="color:yellow; font-size:80px; margin:0;">LOKET -</h1>
+                    <h1 id="angka" style="font-size:250px; margin:0; line-height:1;">${nomorDipanggil}</h1>
+                    <div style="background:yellow; color:black; display:inline-block; padding:10px 40px; border-radius:15px; margin-top:20px;">
+                        <h1 id="loketText" style="margin:0; font-size:60px;">LOKET -</h1>
+                    </div>
                 </div>
-                <div style="border-left: 2px solid white; padding-left: 50px;">
+                <div style="border-left: 3px solid white; padding-left: 50px;">
                     <h2 style="color:white;">SISA ANTRIAN</h2>
-                    <h1 id="sisa" style="font-size:150px; color:cyan; margin:0;">${nomorAntrian - nomorDipanggil}</h1>
+                    <h1 id="sisa" style="font-size:180px; color:cyan; margin:0;">${nomorAntrian - nomorDipanggil}</h1>
                 </div>
             </div>
             <script src="/socket.io/socket.io.js"></script>
@@ -47,28 +50,28 @@ app.get('/tv', (req, res) => {
     `);
 });
 
-// 2. HALAMAN ADMIN (Panel Kontrol)
+// 2. HALAMAN ADMIN (Panel Panggil & Reset)
 app.get('/admin', (req, res) => {
     res.send(`
         <body style="text-align:center; font-family:sans-serif; padding-top:30px; background:#f4f4f4;">
-            <h1>PANEL ADMIN ASABRI</h1>
+            <h1>PANEL ADMIN ASABRI MALANG</h1>
             <div style="display:flex; justify-content:center; gap:20px; margin-bottom:50px;">
                 <button style="padding:40px; font-size:20px; background:green; color:white; border-radius:15px; cursor:pointer;" onclick="panggil(1)">PANGGIL LOKET 1</button>
                 <button style="padding:40px; font-size:20px; background:orange; color:white; border-radius:15px; cursor:pointer;" onclick="panggil(2)">PANGGIL LOKET 2</button>
             </div>
             <hr>
-            <button style="margin-top:50px; padding:20px; background:red; color:white; border:none; border-radius:10px; cursor:pointer;" onclick="reset()">RESET SEMUA NOMOR KE 0</button>
+            <button style="margin-top:50px; padding:20px; background:red; color:white; border:none; border-radius:10px; cursor:pointer;" onclick="reset()">RESET SEMUA NOMOR (MULAI DARI 0)</button>
             <script src="/socket.io/socket.io.js"></script>
             <script>
                 const socket = io();
                 function panggil(n) { socket.emit('proses-panggil', n); }
-                function reset() { if(confirm("Yakin ingin reset semua antrian?")) { socket.emit('reset-antrian'); } }
+                function reset() { if(confirm("Yakin ingin reset semua antrian ke nol?")) { socket.emit('reset-antrian'); } }
             </script>
         </body>
     `);
 });
 
-// 3. HALAMAN AMBIL NOMOR (Kiosk & Printer)
+// 3. HALAMAN AMBIL NOMOR (Kiosk & Printer EPPOS)
 app.get('/ambil', (req, res) => {
     res.send(`
         <!DOCTYPE html>
@@ -85,22 +88,14 @@ app.get('/ambil', (req, res) => {
                         position: absolute; 
                         left: 0; 
                         top: 0; 
-                        width: 50mm; 
-                        padding-left: 5mm; /* MENAMBAH JARAK PAKSA DARI KIRI SEKITAR 0.5 CM */
-                        text-align: center; 
+                        width: 42mm; 
+                        padding-left: 6mm; /* Menggeser teks ke kanan agar tidak terpotong tepi kiri printer */
+                        text-align: center !important; 
                     }
-                    h1 { font-size: 80pt !important; margin: 10px 0 !important; }
-                    
-                    /* Memperbesar tulisan SILAKAN MENUNGGU sesuai permintaan */
-                    .tunggu-teks { 
-                        font-size: 14pt !important; 
-                        margin-top: 10px; 
-                        font-weight: bold; 
-                        text-transform: uppercase;
-                    }
-                    
-                    .sisa-teks { font-size: 14pt !important; font-weight: bold; margin-top: 10px; }
-                    .garis { border-bottom: 2px solid black; margin: 5px 0; }
+                    h1 { font-size: 80pt !important; margin: 5px 0 !important; width: 100%; text-align: center; }
+                    .tunggu-teks { font-size: 13pt !important; font-weight: bold; margin-top: 5px; text-align: center; width: 100%; }
+                    .sisa-teks { font-size: 14pt !important; font-weight: bold; margin-top: 10px; text-align: center; width: 100%; }
+                    .garis { border-bottom: 2px solid black; margin: 5px 0; width: 100%; }
                     .jarak-sobek { height: 70px; }
                 }
             </style>
@@ -110,16 +105,18 @@ app.get('/ambil', (req, res) => {
             <button style="padding:50px; font-size:30px; background:blue; color:white; border-radius:20px; cursor:pointer;" onclick="ambil()">AMBIL & CETAK NOMOR</button>
 
             <div id="cetak" style="display:none; font-family: 'Courier New', monospace;">
-                <h3 style="margin: 0; font-size: 16pt; font-weight: bold;">ASABRI MALANG</h3>
-                <div class="garis"></div>
-                <p style="font-size: 12pt; margin: 10px 0 0 0;">Nomor Antrian:</p>
-                <h1 id="nomor-struk">0</h1>
-                <p id="jam-cetak" style="font-size: 10pt;"></p>
-                <div class="garis"></div>
-                <p class="sisa-teks">Sisa Antrian: <span id="sisa-struk">0</span></p>
-                <p class="tunggu-teks">SILAKAN MENUNGGU</p>
-                <div class="jarak-sobek"></div>
-                <p>.</p>
+                <div style="width: 100%; text-align: center;">
+                    <h3 style="margin: 0; font-size: 16pt; font-weight: bold;">ASABRI MALANG</h3>
+                    <div class="garis"></div>
+                    <p style="font-size: 12pt; margin: 10px 0 0 0;">Nomor Antrian:</p>
+                    <h1 id="nomor-struk">0</h1>
+                    <p id="jam-cetak" style="font-size: 10pt;"></p>
+                    <div class="garis"></div>
+                    <p class="sisa-teks">Sisa Antrian: <span id="sisa-struk">0</span></p>
+                    <p class="tunggu-teks">SILAKAN MENUNGGU</p>
+                    <div class="jarak-sobek"></div>
+                    <p>.</p>
+                </div>
             </div>
 
             <script src="/socket.io/socket.io.js"></script>
@@ -140,7 +137,7 @@ app.get('/ambil', (req, res) => {
     `);
 });
 
-// 4. LOGIKA SERVER
+// 4. LOGIKA SERVER (Socket.io)
 io.on('connection', (socket) => {
     socket.on('tambah-antrian', () => { 
         nomorAntrian++; 
@@ -153,8 +150,14 @@ io.on('connection', (socket) => {
             io.emit('update-layar', { total: nomorAntrian, dipanggil: nomorDipanggil, loket: n, isPanggil: true });
         }
     });
-    socket.on('reset-antrian', () => { nomorAntrian = 0; nomorDipanggil = 0; io.emit('reset-layar'); });
+    socket.on('reset-antrian', () => {
+        nomorAntrian = 0; 
+        nomorDipanggil = 0; 
+        io.emit('reset-layar');
+    });
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => { console.log('Server Running...'); });
+server.listen(PORT, '0.0.0.0', () => {
+    console.log('Server antrian ASABRI Malang berjalan di port ' + PORT);
+});
