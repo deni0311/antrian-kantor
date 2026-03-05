@@ -83,9 +83,10 @@ app.get('/ambil', (req, res) => {
                     #cetak, #cetak * { visibility: visible; }
                     #cetak { 
                         position: absolute; 
-                        left: 2mm; /* Memberi jarak aman 2mm dari tepi kiri agar tidak terpotong */
+                        left: 0; 
                         top: 0; 
-                        width: 44mm; /* Dipersempit lagi agar teks benar-benar di tengah area cetak */
+                        width: 50mm; 
+                        padding-left: 5mm; /* MENAMBAH JARAK PAKSA DARI KIRI SEKITAR 0.5 CM */
                         text-align: center; 
                     }
                     h1 { font-size: 80pt !important; margin: 10px 0 !important; }
