@@ -9,7 +9,7 @@ const io = new Server(server);
 let nomorAntrian = 0; 
 let nomorDipanggil = 0; 
 
-// 1. HALAMAN TV (Disesuaikan dengan nuansa biru ASABRI di gambar)
+// 1. HALAMAN TV (Display Utama)
 app.get('/tv', (req, res) => {
     res.send(`
         <!DOCTYPE html>
@@ -18,26 +18,27 @@ app.get('/tv', (req, res) => {
             <title>Display Antrian ASABRI Malang</title>
             <style>
                 body {
-                    margin: 0;
-                    padding: 0;
+                    margin: 0; padding: 0;
                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                     background-color: #f4f7f9;
                     height: 100vh;
                     display: flex;
                     flex-direction: column;
+                    overflow: hidden;
                 }
-                /* Header Biru sesuai gambar */
+                /* Header */
                 .header {
                     background-color: #2c5e9e;
                     color: white;
-                    padding: 20px;
+                    padding: 15px 30px;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    border-bottom: 5px solid #d4af37; /* Aksen emas */
+                    border-bottom: 5px solid #d4af37;
                 }
-                .header h1 { margin: 0; font-size: 28px; }
+                .header h1 { margin: 0; font-size: 24px; }
                 
+                /* Konten Utama */
                 .main-content {
                     flex: 1;
                     display: flex;
@@ -45,35 +46,46 @@ app.get('/tv', (req, res) => {
                     align-items: center;
                     padding: 20px;
                 }
-                
                 .card {
                     background: white;
-                    border-radius: 20px;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                    padding: 40px;
+                    border-radius: 25px;
+                    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+                    padding: 50px;
                     text-align: center;
-                    min-width: 40%;
+                    min-width: 45%;
                 }
-                
-                .label { font-size: 30px; color: #555; font-weight: bold; margin-bottom: 10px; }
-                .number { font-size: 250px; font-weight: bold; color: #2c5e9e; margin: 0; line-height: 1; }
+                .label { font-size: 35px; color: #555; font-weight: bold; margin-bottom: 10px; }
+                .number { font-size: 280px; font-weight: bold; color: #2c5e9e; margin: 0; line-height: 0.9; }
                 .loket-box {
                     background-color: #d4af37;
                     color: white;
-                    font-size: 60px;
-                    padding: 10px 30px;
-                    border-radius: 15px;
-                    margin-top: 20px;
+                    font-size: 70px;
+                    padding: 15px 40px;
+                    border-radius: 20px;
+                    margin-top: 30px;
                     display: inline-block;
+                    font-weight: bold;
                 }
-                
-                .footer-bar {
+
+                /* Running Text Bar */
+                .footer-running-text {
                     background-color: #2c5e9e;
                     color: white;
-                    padding: 15px;
-                    text-align: center;
-                    font-size: 18px;
+                    padding: 15px 0;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    font-size: 22px;
                     font-weight: bold;
+                    border-top: 3px solid #d4af37;
+                }
+                .marquee {
+                    display: inline-block;
+                    padding-left: 100%;
+                    animation: marquee 20s linear infinite;
+                }
+                @keyframes marquee {
+                    0% { transform: translate(0, 0); }
+                    100% { transform: translate(-100%, 0); }
                 }
             </style>
         </head>
@@ -83,35 +95,42 @@ app.get('/tv', (req, res) => {
                     <h1>PT ASABRI (PERSERO)</h1>
                     <small>Kantor Cabang Malang</small>
                 </div>
-                <div id="jam" style="font-size: 24px;"></div>
+                <div id="jam" style="font-size: 32px; font-weight: bold; font-family: monospace; background: rgba(0,0,0,0.2); padding: 5px 15px; border-radius: 10px;">00:00:00</div>
             </div>
 
             <div class="main-content">
                 <div class="card">
-                    <div class="label">NOMOR ANTRIAN</div>
+                    <div class="label">ANTRIAN SEKARANG</div>
                     <div id="angka" class="number">${nomorDipanggil}</div>
                     <div id="loketText" class="loket-box">LOKET -</div>
                 </div>
 
-                <div class="card" style="min-width: 30%;">
+                <div class="card" style="min-width: 35%;">
                     <div class="label">SISA ANTRIAN</div>
-                    <div id="sisa" class="number" style="font-size: 150px; color: #e67e22;">${nomorAntrian - nomorDipanggil}</div>
+                    <div id="sisa" class="number" style="font-size: 180px; color: #e67e22;">${nomorAntrian - nomorDipanggil}</div>
                 </div>
             </div>
 
-            <div class="footer-bar">
-                PT ASABRI (PERSERO) SAHABAT PERJUANGAN ANDA SEPANJANG MASA
+            <div class="footer-running-text">
+                <div class="marquee">
+                    PT ASABRI (PERSERO) - SAHABAT PERJUANGAN ANDA SEPANJANG MASA &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LAYANAN PRIMA UNTUK PENSIUNAN TNI, POLRI, DAN ASN KEMHAN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PT ASABRI (PERSERO) - SAHABAT PERJUANGAN ANDA SEPANJANG MASA
+                </div>
             </div>
 
             <script src="/socket.io/socket.io.js"></script>
             <script>
                 const socket = io();
                 
-                // Update Jam Realtime
-                setInterval(() => {
+                // Fungsi Jam Digital hh:mm:ss
+                function updateTime() {
                     const now = new Date();
-                    document.getElementById('jam').innerText = now.toLocaleTimeString('id-ID');
-                }, 1000);
+                    const h = String(now.getHours()).padStart(2, '0');
+                    const m = String(now.getMinutes()).padStart(2, '0');
+                    const s = String(now.getSeconds()).padStart(2, '0');
+                    document.getElementById('jam').innerText = h + ":" + m + ":" + s;
+                }
+                setInterval(updateTime, 1000);
+                updateTime();
 
                 socket.on('update-layar', (data) => {
                     document.getElementById('sisa').innerText = data.total - data.dipanggil;
@@ -145,13 +164,13 @@ app.get('/admin', (req, res) => {
             <script>
                 const socket = io();
                 function panggil(n) { socket.emit('proses-panggil', n); }
-                function reset() { if(confirm("Reset semua antrian?")) { socket.emit('reset-antrian'); } }
+                function reset() { if(confirm("Yakin ingin reset semua antrian ke 0?")) { socket.emit('reset-antrian'); } }
             </script>
         </body>
     `);
 });
 
-// 3. HALAMAN AMBIL NOMOR (Sesuai dengan gambar yang Bapak lampirkan)
+// 3. HALAMAN AMBIL NOMOR (Kiosk)
 app.get('/ambil', (req, res) => {
     res.send(`
         <!DOCTYPE html>
@@ -163,84 +182,18 @@ app.get('/ambil', (req, res) => {
                     margin: 0; padding: 0; text-align:center; font-family:sans-serif; 
                     background-color: #f4f7f9; height: 100vh; display: flex; flex-direction: column;
                 }
-                .header-kiosk { background-color: #2c5e9e; color: white; padding: 15px; text-align: left; display: flex; align-items: center; }
+                .header-kiosk { background-color: #2c5e9e; color: white; padding: 20px; text-align: left; border-bottom: 5px solid #d4af37;}
                 .main-kiosk { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
                 .btn-ambil { 
-                    background: white; border: 2px solid #d4af37; padding: 60px; border-radius: 30px; 
-                    box-shadow: 0 10px 20px rgba(0,0,0,0.1); cursor: pointer; 
+                    background: white; border: 3px solid #d4af37; padding: 80px; border-radius: 40px; 
+                    box-shadow: 0 15px 30px rgba(0,0,0,0.1); cursor: pointer; transition: 0.3s;
                 }
-                .btn-ambil img { width: 80px; margin-bottom: 20px; }
-                .btn-ambil div { font-size: 24px; font-weight: bold; color: #2c5e9e; }
+                .btn-ambil:active { transform: scale(0.95); }
+                .btn-title { font-size: 32px; font-weight: bold; color: #2c5e9e; margin-top: 20px; }
                 
                 @media print {
                     @page { margin: 0; size: 58mm auto; }
                     body * { visibility: hidden; }
                     #cetak, #cetak * { visibility: visible; }
                     #cetak { position: absolute; left: 0; top: 0; width: 42mm; padding-left: 6mm; text-align: center; }
-                    h1 { font-size: 80pt !important; margin: 5px 0 !important; }
-                    .tunggu-teks { font-size: 13pt !important; font-weight: bold; }
-                    .jarak-sobek { height: 25px; }
-                }
-            </style>
-        </head>
-        <body>
-            <div class="header-kiosk">
-                <div style="font-weight: bold; font-size: 20px;">Kantor Cabang Malang PT ASABRI (Persero)</div>
-            </div>
-            
-            <div class="main-kiosk">
-                <div class="btn-ambil" onclick="ambil()">
-                    <div style="font-size: 50px;">🖨️</div>
-                    <div>AMBIL NOMOR ANTREAN</div>
-                    <small style="color: #888;">SENTUH DI SINI UNTUK MENCETAK</small>
-                </div>
-            </div>
-
-            <div id="cetak" style="display:none; font-family: 'Courier New', monospace;">
-                <h3 style="margin: 0; font-size: 16pt; font-weight: bold;">ASABRI MALANG</h3>
-                <div style="border-bottom: 2px solid black; margin: 5px 0;"></div>
-                <p style="font-size: 12pt;">Nomor Antrian:</p>
-                <h1 id="nomor-struk">0</h1>
-                <p id="jam-cetak" style="font-size: 10pt;"></p>
-                <div style="border-bottom: 2px solid black; margin: 5px 0;"></div>
-                <p style="font-size: 14pt; font-weight: bold;">Sisa Antrian: <span id="sisa-struk">0</span></p>
-                <p class="tunggu-teks">SILAKAN MENUNGGU</p>
-                <div class="jarak-sobek"></div>
-            </div>
-
-            <script src="/socket.io/socket.io.js"></script>
-            <script>
-                const socket = io();
-                function ambil() { socket.emit('tambah-antrian'); }
-                socket.on('siap-cetak', (data) => {
-                    document.getElementById('nomor-struk').innerText = data.nomor;
-                    document.getElementById('sisa-struk').innerText = data.total - data.dipanggil;
-                    document.getElementById('jam-cetak').innerText = new Date().toLocaleString('id-ID');
-                    document.getElementById('cetak').style.display = 'block';
-                    setTimeout(() => { window.print(); document.getElementById('cetak').style.display = 'none'; }, 500);
-                });
-                socket.on('reset-layar', () => { location.reload(); });
-            </script>
-        </body>
-        </html>
-    `);
-});
-
-// 4. LOGIKA SERVER
-io.on('connection', (socket) => {
-    socket.on('tambah-antrian', () => { 
-        nomorAntrian++; 
-        io.emit('update-layar', { total: nomorAntrian, dipanggil: nomorDipanggil, isPanggil: false }); 
-        socket.emit('siap-cetak', { nomor: nomorAntrian, total: nomorAntrian, dipanggil: nomorDipanggil });
-    });
-    socket.on('proses-panggil', (n) => {
-        if (nomorDipanggil < nomorAntrian) {
-            nomorDipanggil++;
-            io.emit('update-layar', { total: nomorAntrian, dipanggil: nomorDipanggil, loket: n, isPanggil: true });
-        }
-    });
-    socket.on('reset-antrian', () => { nomorAntrian = 0; nomorDipanggil = 0; io.emit('reset-layar'); });
-});
-
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => { console.log('Server Running...'); });
+                    h1 { font-size: 80pt !important; margin:
