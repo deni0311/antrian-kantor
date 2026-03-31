@@ -59,8 +59,8 @@ app.get('/ambil', (req, res) => {
         .btn { background:white; border:3px solid #d4af37; padding:70px; border-radius:40px; box-shadow:0 15px 30px rgba(0,0,0,0.1); cursor:pointer; margin:auto; }
         @media print { body * { visibility:hidden; } #p, #p * { visibility:visible; } #p { position:absolute; left:0; top:0; width:42mm; text-align:center; } }
     </style></head><body>
-        <div style="background:#2c5e9e; color:white; padding:20px; text-align:left; border-bottom:5px solid #d4af37;">PT ASABRI (PERSERO) - Cabang Malang</div>
-        <div class="btn" onclick="s.emit('tambah-antrian')"><div style="font-size:80px;">🖨️</div><div style="font-size:30px; font-weight:bold; color:#2c5e9e;">AMBIL NOMOR</div></div>
+        <div style="background:#2c5e9e; color:white; padding:20px; text-align:left; border-bottom:5px solid #d4af37;">PT ASABRI (PERSERO) - Cabang MALANG</div>
+        <div class="btn" onclick="s.emit('tambah-antrian')"><div style="font-size:80px;">🖨️</div><div style="font-size:30px; font-weight:bold; color:#2c5e9e;">AMBIL NOMOR ANTRIAN</div></div>
         <div id="p" style="display:none; font-family:monospace;">
             <h3>ASABRI MALANG</h3><hr>
             <p>Nomor Antrian:</p><h1 id="n" style="font-size:60pt; margin:10px 0;">0</h1>
