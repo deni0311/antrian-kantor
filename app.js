@@ -12,7 +12,7 @@ app.get('/tv', (req, res) => {
     <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;">
         
         <div style="background:#2c5e9e; color:white; padding:15px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:6px solid #d4af37;">
-            <div><h1 style="margin:0; font-size:30px;">PT ASABRI (PERSERO)</h1><small>KC MALANG</small></div>
+            <div><h1 style="margin:0; font-size:30px;">PT ASABRI (PERSERO)</h1><small>CABANG MALANG</small></div>
             <div id="jam" style="font-size:38px; font-weight:bold; font-family:monospace; background:rgba(0,0,0,0.3); padding:10px 25px; border-radius:12px; border:2px solid #d4af37;">00:00:00</div>
         </div>
 
