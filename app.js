@@ -44,7 +44,7 @@ const headerHTML = `
 // 1. HALAMAN TV
 app.get('/tv', (req, res) => {
     res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV</title></head>
-    <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;">
+    <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;" onclick="mulaiAudio()">
         ${headerHTML}
         <div style="flex:1; display:flex; justify-content:space-around; align-items:center; padding:20px;">
             <div style="background:white; border-radius:30px; box-shadow:0 15px 40px rgba(0,0,0,0.2); padding:50px; text-align:center; min-width:45%;">
@@ -58,36 +58,50 @@ app.get('/tv', (req, res) => {
             </div>
         </div>
         ${footerHTML}
+
         <script src="/socket.io/socket.io.js"></script>
-        <script>${scriptJam}
-            // GANTI BAGIAN SCRIPT DI DALAM app.get('/tv', ...)
-<script>
-    const s = io();
-    ${scriptJam}
+        <script>
+            const s = io();
 
-    // Fungsi Suara Panggil
-    function panggilSuara(nomor, loket) {
-        const text = "Nomor antrian " + nomor + ", silakan menuju ke loket " + loket;
-        const msg = new SpeechSynthesisUtterance(text);
-        msg.lang = 'id-ID'; // Menggunakan Bahasa Indonesia
-        msg.rate = 0.8;      // Kecepatan bicara (0.8 agak lambat agar jelas)
-        window.speechSynthesis.speak(msg);
-    }
+            // 1. Perbaikan Fungsi Jam Agar Berjalan
+            function updateJam() { 
+                const d = new Date(); 
+                const h = String(d.getHours()).padStart(2,'0');
+                const m = String(d.getMinutes()).padStart(2,'0');
+                const s = String(d.getSeconds()).padStart(2,'0');
+                const jamEl = document.getElementById('jam');
+                if(jamEl) jamEl.innerText = h + ":" + m + ":" + s; 
+            }
+            setInterval(updateJam, 1000); 
+            updateJam();
 
-    s.on('update-layar', (d) => {
-        document.getElementById('s').innerText = d.total - d.dipanggil;
-        
-        if(d.isP) { // Jika ini adalah perintah panggil dari admin
-            document.getElementById('a').innerText = d.dipanggil;
-            document.getElementById('l').innerText = "LOKET " + d.loket;
-            
-            // Jalankan suara panggil
-            panggilSuara(d.dipanggil, d.loket);
-        }
-    });
+            // 2. Fungsi Suara
+            let audioIzin = false;
+            function mulaiAudio() { audioIzin = true; console.log("Audio Aktif"); }
 
-    s.on('reset-layar', () => location.reload());
-</script>
+            function panggilSuara(nomor, loket) {
+                if(!audioIzin) return;
+                const text = "Nomor antrian " + nomor + ", silakan menuju ke loket " + loket;
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.lang = 'id-ID';
+                msg.rate = 0.8;
+                window.speechSynthesis.speak(msg);
+            }
+
+            // 3. Perbaikan Logika Panggil
+            s.on('update-layar', (d) => {
+                // Update Sisa Antrian
+                document.getElementById('s').innerText = d.total - d.dipanggil;
+                
+                // Jika ada instruksi panggil (isP: true)
+                if(d.isP) {
+                    document.getElementById('a').innerText = d.dipanggil;
+                    document.getElementById('l').innerText = "LOKET " + d.loket;
+                    panggilSuara(d.dipanggil, d.loket);
+                }
+            });
+
+            s.on('reset-layar', () => location.reload());
         </script>
     </body></html>`);
 });
