@@ -23,9 +23,9 @@ const scriptJam = `
 // Variabel untuk Running Text agar konsisten di semua halaman
 const footerHTML = `
     <div style="background:#2c5e9e; color:white; padding:20px 0; border-top:6px solid #d4af37; overflow:hidden; position:relative;">
-        <div style="display:inline-block; white-space:nowrap; font-size:26px; font-weight:bold; animation:jalan 25s linear infinite;">
+        <div style="display:inline-block; white-space:nowrap; font-size:20px; font-weight:bold; animation:jalan 25s linear infinite;">
             <style>@keyframes jalan { from { transform:translateX(100%); } to { transform:translateX(-100%); } }</style>
-            PT ASABRI (PERSERO) - SAHABAT PERJUANGAN ANDA SEPANJANG MASA &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LAYANAN PRIMA UNTUK TNI, POLRI, DAN ASN KEMHAN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CABANG MALANG
+            PT ASABRI (PERSERO) - SAHABAT PERJUANGAN ANDA SEPANJANG MASA &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LAYANAN PRIMA UNTUK TNI, POLRI, ASN KEMHAN DAN POLRI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CABANG MALANG
         </div>
     </div>
 `;
@@ -35,7 +35,7 @@ const headerHTML = `
     <div style="background:#2c5e9e; color:white; padding:15px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:6px solid #d4af37;">
         <div>
             <h1 style="margin:0; font-size:35px; letter-spacing:1px;">PT ASABRI (PERSERO)</h1>
-            <div style="font-size:20px; font-weight:bold; margin-top:2px; opacity:0.9;">CABANG MALANG</div>
+            <div style="font-size:25px; font-weight:bold; margin-top:2px; opacity:0.9;">CABANG MALANG</div>
         </div>
         <div id="jam" style="font-size:45px; font-weight:bold; font-family:monospace; background:rgba(0,0,0,0.3); padding:8px 25px; border-radius:12px; border:2px solid #d4af37;">00:00:00</div>
     </div>
@@ -100,14 +100,14 @@ app.get('/ambil', (req, res) => {
         <div style="flex:1; display:flex; justify-content:center; align-items:center;">
             <div style="background:white; border:3px solid #d4af37; padding:80px; border-radius:40px; text-align:center; box-shadow:0 15px 30px rgba(0,0,0,0.1); cursor:pointer;" onclick="s.emit('tambah-antrian')">
                 <div style="font-size:120px;">🖨️</div>
-                <div style="font-size:35px; font-weight:bold; color:#2c5e9e; margin-top:20px;">SENTUH UNTUK AMBIL NOMOR</div>
+                <div style="font-size:25px; font-weight:bold; color:#2c5e9e; margin-top:20px;">SENTUH UNTUK AMBIL NOMOR</div>
             </div>
         </div>
         ${footerHTML}
 
         <div id="p" style="display:none; font-family:monospace; width:58mm; text-align:center; padding:10px;">
             <div style="font-size:14pt; font-weight:bold;">PT ASABRI (PERSERO)</div>
-            <div style="font-size:10pt;">CABANG MALANG</div>
+            <div style="font-size:12pt;">CABANG MALANG</div>
             <hr style="border:1px dashed #000;">
             <div style="font-size:12pt;">NOMOR ANTRIAN</div>
             <div id="n" style="font-size:70pt; font-weight:bold; margin:10px 0;">0</div>
