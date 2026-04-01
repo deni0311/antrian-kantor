@@ -75,8 +75,27 @@ app.get('/tv', (req, res) => {
 
 // 2. HALAMAN AMBIL NOMOR
 app.get('/ambil', (req, res) => {
-    res.send(`<!DOCTYPE html><html><head><title>AMBIL ANTRIAN</title></head>
-    <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;">
+    res.send(`<!DOCTYPE html><html><head><title>AMBIL ANTRIAN</title>
+    <style>
+        /* TAMPILAN DI LAYAR MONITOR */
+        body { margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+        
+        /* CSS KHUSUS SAAT DICETAK (PRINT) */
+        @media print {
+            body * { visibility: hidden; } /* Sembunyikan semua elemen layar */
+            #p, #p * { visibility: visible; } /* Hanya tampilkan elemen struk (id="p") */
+            #p { 
+                position: absolute; 
+                left: 0; 
+                top: 0; 
+                width: 100%; 
+                display: block !important; 
+            }
+            @page { size: auto; margin: 0mm; } /* Menghilangkan header/footer browser (tanggal/url) */
+        }
+    </style>
+    </head>
+    <body>
         ${headerHTML}
         <div style="flex:1; display:flex; justify-content:center; align-items:center;">
             <div style="background:white; border:3px solid #d4af37; padding:80px; border-radius:40px; text-align:center; box-shadow:0 15px 30px rgba(0,0,0,0.1); cursor:pointer;" onclick="s.emit('tambah-antrian')">
@@ -85,17 +104,33 @@ app.get('/ambil', (req, res) => {
             </div>
         </div>
         ${footerHTML}
-        <div id="p" style="display:none; font-family:monospace; width:42mm; text-align:center;">
-            <h3>ASABRI MALANG</h3><hr><h1 id="n" style="font-size:60pt; margin:10px 0;">0</h1><p id="t"></p><hr><p>SILAKAN MENUNGGU</p>
+
+        <div id="p" style="display:none; font-family:monospace; width:58mm; text-align:center; padding:10px;">
+            <div style="font-size:14pt; font-weight:bold;">PT ASABRI (PERSERO)</div>
+            <div style="font-size:10pt;">CABANG MALANG</div>
+            <hr style="border:1px dashed #000;">
+            <div style="font-size:12pt;">NOMOR ANTRIAN</div>
+            <div id="n" style="font-size:70pt; font-weight:bold; margin:10px 0;">0</div>
+            <div id="t" style="font-size:10pt;"></div>
+            <hr style="border:1px dashed #000;">
+            <div style="font-size:10pt; font-weight:bold;">SILAKAN MENUNGGU</div>
         </div>
+
         <script src="/socket.io/socket.io.js"></script>
         <script>${scriptJam}
             const s = io();
             s.on('siap-cetak', (d) => {
-                document.getElementById('n').innerText = d.nomor;
-                document.getElementById('t').innerText = new Date().toLocaleString('id-ID');
-                document.getElementById('p').style.display = 'block';
-                window.print(); document.getElementById('p').style.display = 'none';
+                const nEl = document.getElementById('n');
+                const tEl = document.getElementById('t');
+                const pEl = document.getElementById('p');
+                
+                if(nEl && tEl && pEl) {
+                    nEl.innerText = d.nomor;
+                    tEl.innerText = new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+                    
+                    // Proses Cetak
+                    window.print();
+                }
             });
         </script>
     </body></html>`);
