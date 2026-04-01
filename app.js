@@ -60,15 +60,34 @@ app.get('/tv', (req, res) => {
         ${footerHTML}
         <script src="/socket.io/socket.io.js"></script>
         <script>${scriptJam}
-            const s = io();
-            s.on('update-layar', (d) => {
-                document.getElementById('s').innerText = d.total - d.dipanggil;
-                if(d.isP) {
-                    document.getElementById('a').innerText = d.dipanggil;
-                    document.getElementById('l').innerText = "LOKET " + d.loket;
-                }
-            });
-            s.on('reset-layar', () => location.reload());
+            // GANTI BAGIAN SCRIPT DI DALAM app.get('/tv', ...)
+<script>
+    const s = io();
+    ${scriptJam}
+
+    // Fungsi Suara Panggil
+    function panggilSuara(nomor, loket) {
+        const text = "Nomor antrian " + nomor + ", silakan menuju ke loket " + loket;
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'id-ID'; // Menggunakan Bahasa Indonesia
+        msg.rate = 0.8;      // Kecepatan bicara (0.8 agak lambat agar jelas)
+        window.speechSynthesis.speak(msg);
+    }
+
+    s.on('update-layar', (d) => {
+        document.getElementById('s').innerText = d.total - d.dipanggil;
+        
+        if(d.isP) { // Jika ini adalah perintah panggil dari admin
+            document.getElementById('a').innerText = d.dipanggil;
+            document.getElementById('l').innerText = "LOKET " + d.loket;
+            
+            // Jalankan suara panggil
+            panggilSuara(d.dipanggil, d.loket);
+        }
+    });
+
+    s.on('reset-layar', () => location.reload());
+</script>
         </script>
     </body></html>`);
 });
