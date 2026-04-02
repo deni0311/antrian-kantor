@@ -66,8 +66,8 @@ app.get('/tv', (req, res) => {
     res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV ASABRI</title></head>
     <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;" onclick="mulaiAudio()">
         
-        // Ganti bagian ini di kode Bapak:
-            <audio id="musikBacksound" loop src="https://www.bensound.com/bensound-music/bensound-relaxing.mp3"></audio>
+        // audio musik
+            <audio id="musikBacksound" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
         ${headerHTML}
         
@@ -116,7 +116,19 @@ app.get('/tv', (req, res) => {
                 if(!audioIzin) {
                     audioIzin = true; 
                     audioBackground.volume = 0.2; 
-                    audioBackground.play().catch(e => console.log("Audio ditangguhkan browser"));
+                    
+                    // Tambahkan log untuk mengecek status
+                    const playPromise = audioBackground.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.then(_ => {
+                            console.log("Musik mulai diputar!");
+                        }).catch(error => {
+                            console.log("Gagal putar musik: ", error);
+                            // Jika gagal, coba lagi saat ada interaksi berikutnya
+                            audioIzin = false;
+                        });
+                    }
                 }
             }
 
