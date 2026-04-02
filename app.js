@@ -67,7 +67,7 @@ app.get('/tv', (req, res) => {
     <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;" onclick="mulaiAudio()">
         
         // audio musik
-            <audio id="musikBacksound" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
+            <audio id="musikBacksound" loop src="https://drive.google.com/uc?export=download&id=1LWAhfE__w1lK1mzi9YT48BftRvLdxe7c"></audio>
 
         ${headerHTML}
         
@@ -113,24 +113,17 @@ app.get('/tv', (req, res) => {
             let audioIzin = false;
 
             function mulaiAudio() { 
-                if(!audioIzin) {
-                    audioIzin = true; 
-                    audioBackground.volume = 0.2; 
-                    
-                    // Tambahkan log untuk mengecek status
-                    const playPromise = audioBackground.play();
-                    
-                    if (playPromise !== undefined) {
-                        playPromise.then(_ => {
-                            console.log("Musik mulai diputar!");
-                        }).catch(error => {
-                            console.log("Gagal putar musik: ", error);
-                            // Jika gagal, coba lagi saat ada interaksi berikutnya
-                            audioIzin = false;
-                        });
-                    }
-                }
-            }
+    if(!audioIzin) {
+        audioIzin = true; 
+        audioBackground.volume = 0.2; // Volume 20% agar tidak terlalu keras
+        
+        // Memastikan audio diputar setelah file siap
+        audioBackground.play().catch(e => {
+            console.log("Menunggu interaksi atau file belum siap");
+            audioIzin = false; // Reset agar bisa diklik ulang jika gagal
+        });
+    }
+}
 
             // Logika Suara Panggil
             function panggilSuara(nomor, loket) {
