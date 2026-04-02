@@ -72,18 +72,18 @@ app.get('/tv', (req, res) => {
 
     const idMusik = "1LWAhfE__w1lK1mzi9YT48BftRvLdxe7c";
     
-    // PERBAIKAN: Format link gambar dikembalikan ke 1 agar ID terbaca benar
-    const daftarSlide = idFoto.map(id => `https://lh3.googleusercontent.com/u/0/d/$$${id}`);
+    // PERBAIKAN LINK GAMBAR: Menghapus angka '0' atau '2' yang salah di depan kurung kurawal
+    const daftarSlide = idFoto.map(id => `http://googleusercontent.com/profile/picture/${id}`);
 
     res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV ASABRI</title></head>
     <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;" onclick="mulaiAudio()">
         
-        <div id="notifSuara" style="position:fixed; top:10px; left:50%; transform:translateX(-50%); background:#e67e22; color:white; padding:10px 20px; border-radius:50px; z-index:9999; font-weight:bold; cursor:pointer;">
+        <div id="notifSuara" style="position:fixed; top:10px; left:50%; transform:translateX(-50%); background:#e67e22; color:white; padding:10px 20px; border-radius:50px; z-index:9999; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
             KLIK LAYAR UNTUK AKTIFKAN MUSIK & SUARA
         </div>
 
         <audio id="musikBacksound" loop crossorigin="anonymous">
-            <source src="https://docs.google.com/uc?export=open&id=${idMusik}" type="audio/mpeg">
+            <source src="https://drive.google.com/uc?id=${idMusik}" type="audio/mpeg">
         </audio>
 
         ${headerHTML}
@@ -116,19 +116,15 @@ app.get('/tv', (req, res) => {
             const audioBackground = document.getElementById('musikBacksound');
             let audioIzin = false;
 
-            // PERBAIKAN: Fungsi Update Jam yang benar agar tidak 00:00:00
             function updateJam() { 
                 const d = new Date(); 
                 const jamEl = document.getElementById('jam');
                 if(jamEl) {
-                    const h = String(d.getHours()).padStart(2,'0');
-                    const m = String(d.getMinutes()).padStart(2,'0');
-                    const sec = String(d.getSeconds()).padStart(2,'0');
-                    jamEl.innerText = h + ":" + m + ":" + sec;
+                    jamEl.innerText = d.toLocaleTimeString('id-ID', { hour12: false });
                 }
             }
             setInterval(updateJam, 1000); 
-            updateJam(); // Langsung panggil agar tidak nunggu 1 detik
+            updateJam();
 
             function mulaiAudio() { 
                 if(!audioIzin) {
@@ -137,7 +133,7 @@ app.get('/tv', (req, res) => {
                     audioBackground.play().then(() => {
                         document.getElementById('notifSuara').style.display = 'none';
                     }).catch(e => {
-                        console.log("Audio Play Error:", e);
+                        console.error("Gagal putar musik:", e);
                         audioIzin = false;
                     });
                 }
