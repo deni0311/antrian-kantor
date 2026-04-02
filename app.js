@@ -46,9 +46,9 @@ app.get('/tv', (req, res) => {
     // 1. GANTI ID DI BAWAH INI DENGAN ID FILE JPG BAPAK (BUKAN ID FOLDER)
     // ID file adalah kode acak di link "Bagikan" per file.
     const idFoto = [
-        "1L-4H7jq2gICJjHrtkOFXoIeAFfawE6pT", // ID File Slide 1
-        "1VwXRsVkhLt5fy3aJqN7QsmNY-RqynrGB", // ID File Slide 2
-        "1qWXns-6xF39TrYxqvnC_aTklDe0m3tso"  // ID File Slide 3
+        "1L-4H7jq2gICJjHrtkOFXoIeAFfawE6pT" // ID File Slide 1
+        //"1VwXRsVkhLt5fy3aJqN7QsmNY-RqynrGB", // ID File Slide 2
+        //"1qWXns-6xF39TrYxqvnC_aTklDe0m3tso"  // ID File Slide 3
         // ... teruskan sampai 71 ID
     ];
 
