@@ -46,9 +46,15 @@ app.get('/tv', (req, res) => {
     // 1. GANTI ID DI BAWAH INI DENGAN ID FILE JPG BAPAK (BUKAN ID FOLDER)
     // ID file adalah kode acak di link "Bagikan" per file.
    const idFoto = [
-        "1L-4H7jq2gICJjHrtkOFXoIeAFfawE6pT",
-        "1VwXRsVkhLt5fy3aJqN7QsmNY-RqynrGB",
-        "1qWXns-6xF39TrYxqvnC_aTklDe0m3tso"
+        "1L-4H7jq2gICJjHrtkOFXoIeAFfawE6pT","1VwXRsVkhLt5fy3aJqN7QsmNY-RqynrGB","1qWXns-6xF39TrYxqvnC_aTklDe0m3tso","1sW7_xr5B4DA5PGyuQOyp2Mx-cNcxfa0h","1IaG1k4DjzFqKMysnRGxDbmsz-4XY4ePZ","19cw57w_sDsds3SineNFBZjONtMcjC-RD","1gVuuq4OmVgPTMBfd0H0oGIRRUrhOYWd","1UNl5Z8h4RMP1pFAuw-MVTcSuIQC7d0-y",
+        "1VqVHa0aC5PdG07V4DXMwHKVhRZH14BKr","1EpNeJnr0ikZ5HwT5dO0Ox_C2dQygcrYu","1SsSSLwzJ7r7cK5T6-wwl7jGwT2638hcb","1CWl5AS4d0Xup_k3OINfHibq_ZUt-3Xue","1pP9T_wT9txCQzPlPSReqyDISGEH0LSLc","1LyyHKlHJAqKKzdZowQNw8rBN-KKyk9Xc","13U1Hf8zfp2Nmx3HaiaFB6hQ-dXffpdHU","1jPzfWnCiIP7nFX4fDdCJ4bQNzZKWBVpx",
+        "13bWS9o5wZPMGFhjzlRYg64Rf7llYaOD3","1LRozf9TVSbxbmVw12zTYOo00dLVtbfuT","12NLE1hacQZDicQuCaczAyxjkHFh2PXpk","104F-6dKMF2bChhb7LK3jjX5Xedj1vLRV","1LRhSsWbfWp4U0J224Ke65jNw9V_k7Gmy","1mylsmU1p4PK0QwcPjDnx6vmZrtjC_uwz","1tqHz7VGGWlOMjCfn6o7KUtjVviBKRjI7","1EFWKJtNCnlchoQcGsT3NHUuYwlS0YEz3",
+        "1Pj09F8770PfYUfkiX79Fx-bHE225bL-7","1BAUSnNNVi4kcqpOjh4psUYOwfrMae96M","1UEKmhKpDbExGhyLyq73nBsNk9Xo_XfHJ","1kxcMBrCURZt4rt0dLX7UWdYxIPntvLXt","1-1cBu_s8jvmGTcdIipsEsoChqreY330d","1y9JSpKi4lbQn4IDBIl9mJ_aHZ2l0OURg","1f_gkJpwQlEWprGWEoeb4qZuMxxvrmwSz","1HgACg7nspZHFGYWR0xSCEVISSNqmJFn6",
+        "16T2rL7zSUGlXmSCc7pzQ4zn4_hdPrwIb","14SCEaBF32qAz0Rja2Bh5YrS1J1p64shb","1J4J3rfaSgKfFM_NTgI1Uok1TISzYoPCP","1Z3RtEHrQ0TWHx8nrrcIRk5jMHGXqw1ow","1C4Q8mLogwkqerp8-RdbFn7QQ5dCAsgyV","1wAD_qLTGYj1ZaQf_TSUqjzG4YC9juun-","1aV3UB5ULYDiJLqicJANmMhZXJfv6hOPt","1FByRoKK59IDE5BYDfvh6TnH0EQ0J1REe",
+        "1mqmh7QeB0BRUchA3to5E-vLTpzO6SQCE","1dROK0N25x7XZec5cX9UG2flyOZIpD0CH","1D4Q6m9n8wpz-gfCYdKDp8WI9Fxv1vWbd","1_RstiXCiG-H1VkaAJvBF9ANU4TV6rRvh","1g00ixv7StUG7K-y7Y3bWqQu7z1-tCvrz","1koO-XEez8fcTWtd_y-lwRfigPSlIyHxL","1XE7HfuwLsWLYJKxorkDxFif6zCMIpPSY","104fohrGKJLnAhx1Q414hJx5sO-Rast1q",
+        "1LVUUn_6LgN4LV-PVhxVTeF02Wb7IjOcZ","19MC3ISAZ2iJPrxlOHVQH-9KTWrUt9gYy","1C0K0ckv5Z1DSI7kb1ZSGpdEMCbhDDfsa","14h73mfE2grQj-syVwBVrXzwua1HszkAm","1jjsrtUUgjNKyie62HMaWrb2ORVq28WE4","1C93hXm-ZwlcCl3nh8nIyHx6YHFylkZil","1jaDyoVTytEkrUudcndkoIGZENwqC5BNT","11Se0Btjg9Zovvc1tWONjBIrnk2Mp_EOk",
+        "195GyNIUxdhLlV1Cztd0gwwailry0xMHA","1SK81LXLBwz_sRtXAAGXyT4yHIy1tB_Vx","1XGHSq7d3iKrAQFJWXaYOx9X8fnBMPvQ3","1YtxvZrUQE4rTSnV8NY0kOw2o8bDCBFRc","1DRrhq2fbf4NZbVgTscr8oQ7Z78UT-mM9","1Lp-mr7fDHD_GZMM5a3RnMHwdeBlg2X1w","1AsvcH3-zdNI-0MmCx-3W0rrHjUWoQDkF","1J2IERnD371OCd0AtQnpwZPCid7kb626Z",
+        "1pnUvkXFCEjOd7c6uc0W9OIOA-QPa8j-o","1oHDxhuBoS02CcsFKZX_AT3sIIXH3222F","1Oqql5RE1YD5IqUGgynCc2drXT04IuUOu","1Iqy8Q6FEWQezBPvjncpLWeZzNou0mSoJ","1DrFausnzMJxlY3KucRFjlgYz0kAn7WeW","1-WiTDgy0CXYFA_17VwL2ag45X9Cc6xZj","1oiBd8VNlpOdO-PluGArk7sCPbqk6EJ97"
     ];
 
        // 2. Gunakan format link 'uc?export=view' agar gambar langsung muncul (bypass halaman Drive)
