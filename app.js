@@ -45,14 +45,13 @@ const headerHTML = `
 app.get('/tv', (req, res) => {
     // 1. GANTI ID DI BAWAH INI DENGAN ID FILE JPG BAPAK (BUKAN ID FOLDER)
     // ID file adalah kode acak di link "Bagikan" per file.
-    const idFoto = [
-        "1L-4H7jq2gICJjHrtkOFXoIeAFfawE6pT" // ID File Slide 1
-        "1VwXRsVkhLt5fy3aJqN7QsmNY-RqynrGB", // ID File Slide 2
-        "1qWXns-6xF39TrYxqvnC_aTklDe0m3tso"  // ID File Slide 3
-        // ... teruskan sampai 71 ID
+   const idFoto = [
+        "1L-4H7jq2gICJjHrtkOFXoIeAFfawE6pT",
+        "1VwXRsVkhLt5fy3aJqN7QsmNY-RqynrGB",
+        "1qWXns-6xF39TrYxqvnC_aTklDe0m3tso"
     ];
 
-    // 2. Gunakan format link 'uc?export=view' agar gambar langsung muncul (bypass halaman Drive)
+       // 2. Gunakan format link 'uc?export=view' agar gambar langsung muncul (bypass halaman Drive)
     const daftarSlide = idFoto.map(id => `https://lh3.googleusercontent.com/u/0/d/${id}`);
 
     res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV ASABRI</title></head>
