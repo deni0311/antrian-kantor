@@ -130,17 +130,34 @@ app.get('/tv', (req, res) => {
             setInterval(geserSlide, 10000); // Ganti slide setiap 10 detik
 
             // Suara & Update Antrian
-            let audioIzin = false;
-            function mulaiAudio() { audioIzin = true; }
+            <script>
+    const audioBackground = document.getElementById('musikBacksound');
 
-            function panggilSuara(nomor, loket) {
-                if(!audioIzin) return;
-                const text = "Nomor antrian " + nomor + ", silakan menuju ke loket " + loket;
-                const msg = new SpeechSynthesisUtterance(text);
-                msg.lang = 'id-ID';
-                msg.rate = 0.8;
-                window.speechSynthesis.speak(msg);
-            }
+    function mulaiAudio() { 
+        audioIzin = true; 
+        audioBackground.volume = 0.2; // Set volume musik agak pelan (20%)
+        audioBackground.play();
+    }
+
+    function panggilSuara(nomor, loket) {
+        if(!audioIzin) return;
+
+        // 1. Kecilkan musik saat ada panggilan
+        audioBackground.volume = 0.05; 
+
+        const text = "Nomor antrian " + nomor + ", silakan menuju ke loket " + loket;
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'id-ID';
+        msg.rate = 0.8;
+
+        // 2. Saat suara panggilan selesai, besarkan lagi musiknya
+        msg.onend = function() {
+            audioBackground.volume = 0.2; 
+        };
+
+        window.speechSynthesis.speak(msg);
+    }
+</script>
 
             s.on('update-layar', (d) => {
                 document.getElementById('s').innerText = d.total - d.dipanggil;
@@ -153,6 +170,11 @@ app.get('/tv', (req, res) => {
             s.on('reset-layar', () => location.reload());
         </script>
     </body></html>`);
+    <body style="..." onclick="mulaiAudio()">
+    <audio id="musikBacksound" loop src="https://www.bensound.com/bensound-music/bensound-sunny.mp3"></audio>
+    
+    ${headerHTML}
+    ...
 });
 
 // 2. HALAMAN AMBIL NOMOR
