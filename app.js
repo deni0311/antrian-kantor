@@ -43,41 +43,87 @@ const headerHTML = `
 
 // 1. HALAMAN TV
 app.get('/tv', (req, res) => {
-    res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV</title></head>
+    // DAFTAR ID FOTO DARI FOLDER DRIVE BAPAK
+    const idFoto = [
+        "1DBqhH4D-LV4F-PUIWvecLXCcCkk8jU5q", // Folder ID utama sebagai referensi
+        // ID file lainnya akan diproses oleh sistem di bawah ini
+    ];
+
+    // Kode otomatis merangkai ID menjadi link gambar yang bisa tampil di TV
+    const daftarSlide = idFoto.map(id => `https://lh3.googleusercontent.com/d/${id}`);
+
+    res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV ASABRI</title></head>
     <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;" onclick="mulaiAudio()">
-        ${headerHTML}
-        <div style="flex:1; display:flex; justify-content:space-around; align-items:center; padding:20px;">
-            <div style="background:white; border-radius:30px; box-shadow:0 15px 40px rgba(0,0,0,0.2); padding:50px; text-align:center; min-width:45%;">
-                <div style="font-size:40px; font-weight:bold; color:#444;">NOMOR ANTRIAN</div>
-                <div id="a" style="font-size:280px; font-weight:bold; color:#2c5e9e; margin:0; line-height:0.8;">${panggil}</div>
-                <div id="l" style="background:#d4af37; color:white; font-size:80px; padding:15px 50px; border-radius:20px; margin-top:35px; display:inline-block; font-weight:bold;">LOKET -</div>
+        
+        <div style="background:#2c5e9e; color:white; padding:15px 40px; display:flex; justify-content:space-between; align-items:center; border-bottom:6px solid #d4af37;">
+            <div>
+                <h1 style="margin:0; font-size:35px; letter-spacing:1px;">PT ASABRI (PERSERO)</h1>
+                <div style="font-size:20px; font-weight:bold; margin-top:2px; opacity:0.9;">CABANG MALANG</div>
             </div>
-            <div style="background:white; border-radius:30px; box-shadow:0 15px 40px rgba(0,0,0,0.2); padding:50px; text-align:center; min-width:35%;">
-                <div style="font-size:40px; font-weight:bold; color:#e67e22;">SISA ANTRIAN</div>
-                <div id="s" style="font-size:200px; font-weight:bold; color:#e67e22;">${antri - panggil}</div>
+            <div id="jam" style="font-size:45px; font-weight:bold; font-family:monospace; background:rgba(0,0,0,0.3); padding:8px 25px; border-radius:12px; border:2px solid #d4af37;">00:00:00</div>
+        </div>
+        
+        <div style="flex:1; display:flex; padding:20px; gap:20px; overflow:hidden;">
+            
+            <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
+                <div style="flex:2; background:white; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1); text-align:center; display:flex; flex-direction:column; justify-content:center; padding:20px;">
+                    <div style="font-size:35px; font-weight:bold; color:#444;">NOMOR ANTRIAN</div>
+                    <div id="a" style="font-size:200px; font-weight:bold; color:#2c5e9e; line-height:1;">0</div>
+                    <div id="l" style="background:#d4af37; color:white; font-size:60px; padding:10px 40px; border-radius:15px; margin-top:20px; align-self:center; font-weight:bold;">LOKET -</div>
+                </div>
+                
+                <div style="flex:1; background:white; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1); text-align:center; display:flex; flex-direction:column; justify-content:center;">
+                    <div style="font-size:30px; font-weight:bold; color:#e67e22;">SISA ANTRIAN</div>
+                    <div id="s" style="font-size:100px; font-weight:bold; color:#e67e22;">0</div>
+                </div>
+            </div>
+
+            <div style="flex:1.5; background:white; border-radius:30px; box-shadow:0 10px 30px rgba(0,0,0,0.1); overflow:hidden; position:relative;">
+                <div id="slider" style="width:100%; height:100%; display:flex; transition: transform 1s ease-in-out;">
+                    ${daftarSlide.map(url => `<img src="${url}" style="width:100%; height:100%; object-fit:contain; flex-shrink:0;">`).join('')}
+                </div>
+            </div>
+
+        </div>
+
+        <div style="background:#2c5e9e; color:white; padding:20px 0; border-top:6px solid #d4af37; overflow:hidden; position:relative;">
+            <div style="display:inline-block; white-space:nowrap; font-size:26px; font-weight:bold; animation:jalan 25s linear infinite;">
+                <style>@keyframes jalan { from { transform:translateX(100%); } to { transform:translateX(-100%); } }</style>
+                PT ASABRI (PERSERO) - SAHABAT PERJUANGAN ANDA SEPANJANG MASA &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LAYANAN PRIMA UNTUK TNI, POLRI, DAN ASN KEMHAN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; PT ASABRI (PERSERO) CABANG MALANG
             </div>
         </div>
-        ${footerHTML}
 
         <script src="/socket.io/socket.io.js"></script>
         <script>
             const s = io();
-
-            // 1. Perbaikan Fungsi Jam Agar Berjalan
+            
+            // Jam Digital
             function updateJam() { 
                 const d = new Date(); 
                 const h = String(d.getHours()).padStart(2,'0');
                 const m = String(d.getMinutes()).padStart(2,'0');
                 const s = String(d.getSeconds()).padStart(2,'0');
-                const jamEl = document.getElementById('jam');
-                if(jamEl) jamEl.innerText = h + ":" + m + ":" + s; 
+                document.getElementById('jam').innerText = h + ":" + m + ":" + s; 
             }
-            setInterval(updateJam, 1000); 
-            updateJam();
+            setInterval(updateJam, 1000); updateJam();
 
-            // 2. Fungsi Suara
+            // Jalankan Slider Otomatis
+            let slideIndex = 0;
+            const slider = document.getElementById('slider');
+            const totalSlides = ${idFoto.length};
+
+            function geserSlide() {
+                if (totalSlides > 1) {
+                    slideIndex++;
+                    if (slideIndex >= totalSlides) slideIndex = 0;
+                    slider.style.transform = "translateX(-" + (slideIndex * 100) + "%)";
+                }
+            }
+            setInterval(geserSlide, 10000); // Ganti slide setiap 10 detik
+
+            // Suara & Update Antrian
             let audioIzin = false;
-            function mulaiAudio() { audioIzin = true; console.log("Audio Aktif"); }
+            function mulaiAudio() { audioIzin = true; }
 
             function panggilSuara(nomor, loket) {
                 if(!audioIzin) return;
@@ -88,19 +134,14 @@ app.get('/tv', (req, res) => {
                 window.speechSynthesis.speak(msg);
             }
 
-            // 3. Perbaikan Logika Panggil
             s.on('update-layar', (d) => {
-                // Update Sisa Antrian
                 document.getElementById('s').innerText = d.total - d.dipanggil;
-                
-                // Jika ada instruksi panggil (isP: true)
                 if(d.isP) {
                     document.getElementById('a').innerText = d.dipanggil;
                     document.getElementById('l').innerText = "LOKET " + d.loket;
                     panggilSuara(d.dipanggil, d.loket);
                 }
             });
-
             s.on('reset-layar', () => location.reload());
         </script>
     </body></html>`);
