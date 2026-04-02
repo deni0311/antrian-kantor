@@ -82,7 +82,9 @@ app.get('/tv', (req, res) => {
             KLIK LAYAR UNTUK AKTIFKAN MUSIK & SUARA
         </div>
 
-        <audio id="musikBacksound" loop src="https://docs.google.com/uc?export=open&id=${idMusik}"></audio>
+        // Ganti baris audio di dalam res.send menjadi seperti ini:
+        <audio id="musikBacksound" loop src="https://drive.google.com/uc?export=download&id=${idMusik}"></audio>
+      
 
         ${headerHTML}
         
