@@ -78,13 +78,11 @@ app.get('/tv', (req, res) => {
     res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV ASABRI</title></head>
     <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;" onclick="mulaiAudio()">
         
-        <div id="notifSuara" style="position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#e67e22; color:white; padding:15px 30px; border-radius:50px; z-index:9999; font-weight:bold; cursor:pointer; box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+        <div id="notifSuara" style="position:fixed; top:10px; left:50%; transform:translateX(-50%); background:#e67e22; color:white; padding:10px 20px; border-radius:50px; z-index:9999; font-weight:bold; cursor:pointer;">
             KLIK LAYAR UNTUK AKTIFKAN MUSIK & SUARA
         </div>
 
-        // Ganti baris audio di dalam res.send menjadi seperti ini:
         <audio id="musikBacksound" loop src="https://drive.google.com/uc?export=download&id=${idMusik}"></audio>
-      
 
         ${headerHTML}
         
@@ -116,15 +114,6 @@ app.get('/tv', (req, res) => {
             const audioBackground = document.getElementById('musikBacksound');
             let audioIzin = false;
 
-            // Jam Digital
-            function updateJam() { 
-                const d = new Date(); 
-                const jamEl = document.getElementById('jam');
-                if(jamEl) jamEl.innerText = d.toLocaleTimeString('id-ID'); 
-            }
-            setInterval(updateJam, 1000); updateJam();
-
-            // Fungsi Aktifkan Audio
             function mulaiAudio() { 
                 if(!audioIzin) {
                     audioIzin = true; 
@@ -132,26 +121,21 @@ app.get('/tv', (req, res) => {
                     audioBackground.play().then(() => {
                         document.getElementById('notifSuara').style.display = 'none';
                     }).catch(e => {
-                        console.log("Klik lagi!");
                         audioIzin = false;
                     });
                 }
             }
 
-            // Fungsi Panggil Suara dengan Ducking
             function panggilSuara(nomor, loket) {
                 if(!audioIzin) return;
                 audioBackground.volume = 0.05; 
                 const text = "Nomor antrian " + nomor + ", silakan menuju ke loket " + loket;
                 const msg = new SpeechSynthesisUtterance(text);
                 msg.lang = 'id-ID';
-                msg.rate = 0.8;
                 msg.onend = () => { audioBackground.volume = 0.2; };
-                msg.onerror = () => { audioBackground.volume = 0.2; };
                 window.speechSynthesis.speak(msg);
             }
 
-            // Slider
             let slideIndex = 0;
             const slider = document.getElementById('slider');
             const totalSlides = ${idFoto.length};
@@ -162,7 +146,6 @@ app.get('/tv', (req, res) => {
                 }
             }, 10000);
 
-            // Socket Listeners
             s.on('update-layar', (d) => {
                 document.getElementById('s').innerText = d.total - d.dipanggil;
                 if(d.isP) {
@@ -171,7 +154,6 @@ app.get('/tv', (req, res) => {
                     panggilSuara(d.dipanggil, d.loket);
                 }
             });
-            s.on('reset-layar', () => location.reload());
         </script>
     </body></html>`);
 });
