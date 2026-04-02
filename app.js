@@ -72,8 +72,8 @@ app.get('/tv', (req, res) => {
 
     const idMusik = "1LWAhfE__w1lK1mzi9YT48BftRvLdxe7c";
     
-    // PERBAIKAN LINK GAMBAR: Menghapus angka '0' atau '2' yang salah di depan kurung kurawal
-    const daftarSlide = idFoto.map(id => `http://googleusercontent.com/profile/picture/${id}`);
+    // FORMAT BARU: Menggunakan link thumbnail Google Drive yang lebih stabil untuk TV
+    const daftarSlide = idFoto.map(id => `https://drive.google.com/thumbnail?id=${id}&sz=w1920`);
 
     res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV ASABRI</title></head>
     <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;" onclick="mulaiAudio()">
@@ -82,8 +82,8 @@ app.get('/tv', (req, res) => {
             KLIK LAYAR UNTUK AKTIFKAN MUSIK & SUARA
         </div>
 
-        <audio id="musikBacksound" loop crossorigin="anonymous">
-            <source src="https://drive.google.com/uc?id=${idMusik}" type="audio/mpeg">
+        <audio id="musikBacksound" loop preload="auto">
+            <source src="https://drive.google.com/uc?export=download&id=${idMusik}" type="audio/mpeg">
         </audio>
 
         ${headerHTML}
@@ -130,15 +130,17 @@ app.get('/tv', (req, res) => {
                 if(!audioIzin) {
                     audioIzin = true; 
                     audioBackground.volume = 0.2; 
+                    // Kita coba putar, jika gagal (karena browser) kita reset status agar bisa dicoba lagi
                     audioBackground.play().then(() => {
                         document.getElementById('notifSuara').style.display = 'none';
                     }).catch(e => {
                         console.error("Gagal putar musik:", e);
-                        audioIzin = false;
+                        audioIzin = false; 
                     });
                 }
             }
 
+            // Fungsi panggil tetap dengan ducking
             function panggilSuara(nomor, loket) {
                 if(!audioIzin) return;
                 audioBackground.volume = 0.05; 
