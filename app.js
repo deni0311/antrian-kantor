@@ -53,7 +53,7 @@ app.get('/tv', (req, res) => {
     ];
 
     // 2. Gunakan format link 'uc?export=view' agar gambar langsung muncul (bypass halaman Drive)
-    const daftarSlide = idFoto.map(id => `https://drive.google.com/uc?export=view&id=${id}`);
+    const daftarSlide = idFoto.map(id => `https://lh3.googleusercontent.com/u/0/d/${id}`);
 
     res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV ASABRI</title></head>
     <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;" onclick="mulaiAudio()">
