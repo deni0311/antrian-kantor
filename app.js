@@ -66,7 +66,8 @@ app.get('/tv', (req, res) => {
     res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV ASABRI</title></head>
     <body style="margin:0; padding:0; font-family:sans-serif; background:#f4f7f9; height:100vh; display:flex; flex-direction:column; overflow:hidden;" onclick="mulaiAudio()">
         
-        <audio id="musikBacksound" loop src="https://www.bensound.com/bensound-music/bensound-sunny.mp3"></audio>
+        // Ganti bagian ini di kode Bapak:
+            <audio id="musikBacksound" loop src="https://www.bensound.com/bensound-music/bensound-relaxing.mp3"></audio>
 
         ${headerHTML}
         
