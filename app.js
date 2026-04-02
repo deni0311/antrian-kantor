@@ -46,7 +46,7 @@ app.get('/tv', (req, res) => {
     // 1. GANTI ID DI BAWAH INI DENGAN ID FILE JPG BAPAK (BUKAN ID FOLDER)
     // ID file adalah kode acak di link "Bagikan" per file.
    const idFoto = [
-        "1L-4H7jq2gICJjHrtkOFXoIeAFfawE6pT","1VwXRsVkhLt5fy3aJqN7QsmNY-RqynrGB","1qWXns-6xF39TrYxqvnC_aTklDe0m3tso","1sW7_xr5B4DA5PGyuQOyp2Mx-cNcxfa0h","1IaG1k4DjzFqKMysnRGxDbmsz-4XY4ePZ","19cw57w_sDsds3SineNFBZjONtMcjC-RD","1gVuuq4OmVgPTMBfd0H0oGIRRUrhOYWd","1UNl5Z8h4RMP1pFAuw-MVTcSuIQC7d0-y",
+        "1L-4H7jq2gICJjHrtkOFXoIeAFfawE6pT","1VwXRsVkhLt5fy3aJqN7QsmNY-RqynrGB","1qWXns-6xF39TrYxqvnC_aTklDe0m3tso","1sW7_xr5B4DA5PGyuQOyp2Mx-cNcxfa0h","1IaG1k4DjzFqKMysnRGxDbmsz-4XY4ePZ","19cw57w_sDsds3SineNFBZjONtMcjC-RD","1gVuuq4OmVgPTMBfd0H0oGIRRUrhOYWd-","1UNl5Z8h4RMP1pFAuw-MVTcSuIQC7d0-y",
         "1VqVHa0aC5PdG07V4DXMwHKVhRZH14BKr","1EpNeJnr0ikZ5HwT5dO0Ox_C2dQygcrYu","1SsSSLwzJ7r7cK5T6-wwl7jGwT2638hcb","1CWl5AS4d0Xup_k3OINfHibq_ZUt-3Xue","1pP9T_wT9txCQzPlPSReqyDISGEH0LSLc","1LyyHKlHJAqKKzdZowQNw8rBN-KKyk9Xc","13U1Hf8zfp2Nmx3HaiaFB6hQ-dXffpdHU","1jPzfWnCiIP7nFX4fDdCJ4bQNzZKWBVpx",
         "13bWS9o5wZPMGFhjzlRYg64Rf7llYaOD3","1LRozf9TVSbxbmVw12zTYOo00dLVtbfuT","12NLE1hacQZDicQuCaczAyxjkHFh2PXpk","104F-6dKMF2bChhb7LK3jjX5Xedj1vLRV","1LRhSsWbfWp4U0J224Ke65jNw9V_k7Gmy","1mylsmU1p4PK0QwcPjDnx6vmZrtjC_uwz","1tqHz7VGGWlOMjCfn6o7KUtjVviBKRjI7","1EFWKJtNCnlchoQcGsT3NHUuYwlS0YEz3",
         "1Pj09F8770PfYUfkiX79Fx-bHE225bL-7","1BAUSnNNVi4kcqpOjh4psUYOwfrMae96M","1UEKmhKpDbExGhyLyq73nBsNk9Xo_XfHJ","1kxcMBrCURZt4rt0dLX7UWdYxIPntvLXt","1-1cBu_s8jvmGTcdIipsEsoChqreY330d","1y9JSpKi4lbQn4IDBIl9mJ_aHZ2l0OURg","1f_gkJpwQlEWprGWEoeb4qZuMxxvrmwSz","1HgACg7nspZHFGYWR0xSCEVISSNqmJFn6",
