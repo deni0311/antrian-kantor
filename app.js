@@ -60,7 +60,7 @@ app.get('/tv', (req, res) => {
     ];
 
     // 2. Format link gambar yang stabil
-    const daftarSlide = idFoto.map(id => `https://drive.google.com/uc?export=view&id=${id}`);
+       const daftarSlide = idFoto.map(id => `https://lh3.googleusercontent.com/u/0/d/${id}`);
 
     // 3. Kirim tampilan ke Browser
     res.send(`<!DOCTYPE html><html><head><title>DISPLAY TV ASABRI</title></head>
